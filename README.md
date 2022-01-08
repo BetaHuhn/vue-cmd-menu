@@ -121,11 +121,12 @@ export default Vue.extend({
 - *keybinding*: `Array<string> | null` - combination of keys that need to be pressed (default: `['meta', 'k']`)
 - *shadow*: `boolean` - add a shadow to the view box (default: `true`)
 - *overlay*: `boolean` - show an overlay under the view box (default: `true`)
-- *options*: `Fuse.IFuseOptions<string>` - options to pass to Fuse.js ([see options page](https://fusejs.io/api/options.html)) (default: `{}`)
+- *nestedSearch*: `boolean` - search/filter nested actions
+- *fuseOptions*: `Fuse.IFuseOptions<string>` - options to pass to Fuse.js ([see options page](https://fusejs.io/api/options.html)) (default: `{}`)
 
 ### Actions
 
-There are different type of actions you can define. They all require at least a `id`, `title` and if it doesn't have any child actions, a `action` handler:
+There are different type of actions you can define. They all require at least a `id`, `text` and if it doesn't have any child actions, a `action` handler:
 
 ```js
 const action ={
@@ -140,9 +141,9 @@ Here are all the options available to an action:
 | name         | description                                                                         | type                                          | required |
 |--------------|-------------------------------------------------------------------------------------|-----------------------------------------------|----------|
 | id           | Internal ID of the action                                                           | string                                        | true     |
-| title        | Title which will be shown in the list                                               | string                                        | true     |
+| text        | Text which will be shown for each action in the list                                               | string                                        | true     |
 | action       | Hanlder which will be called when the action is selected                            | function                                      | true     |
-| icon         | Icon to show before the title in the UI                                             | Vue Component/string (only when slot is used) | false    |
+| icon         | Icon to show before the text in the UI                                             | Vue Component/string (only when slot is used) | false    |
 | keybindings  | Keystrokes to attach to the action                                                  | string[]                                      | false    |
 | tag          | Tag to show before the input field after the action is selected                     | string                                        | false    |
 | placeholder  | Placeholder to show when waiting for user input after the parent action is selected | string                                        | false    |
@@ -217,6 +218,14 @@ The shortcut by default listens to the meta key (CMD on Mac, Win on Windows) and
 <!-- you can also close the modal with the opposite event: `'closeCommandMenu.myName'` -->
 <button type="button" @click.prevent="$root.$emit('closeCommandMenu.myName')">Close "myName" modal</button>
 ```
+
+### Filtering
+
+vue-command-menu uses [Fuse.js](https://fusejs.io/) under the hood to filter the specified actions. This allows for fuzzy searching i.e. the search term doesn't have to be a exact match. By default it searches the action's title and keys defined with the `keywords` property. 
+
+If you want to search nested actions as well, enable it with the `nestedSearch` prop.
+
+You can further [fine-tune](https://fusejs.io/api/options.html#options) fuse.js with the `fuseOptions` prop.
 
 ## 📖 Examples
 

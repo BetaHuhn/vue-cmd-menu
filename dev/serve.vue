@@ -6,6 +6,7 @@
       </template>
     </CommandMenu>
     <div class="container">
+      <h1>Command Menu</h1>
       <button type="button" @click.prevent="$root.$emit('openCommandMenu')">Show</button>
     </div>
   </div>
@@ -53,6 +54,7 @@ export default Vue.extend({
 					id: 'focus-mode',
 					keybindings: [ 'f' ],
 					text: 'Toggle focus mode',
+          keywords: [ 'test', 'hello' ],
 					action: () => {
 						 alert('Focus mode')
 					}

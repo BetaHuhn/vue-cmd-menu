@@ -91,7 +91,8 @@ interface Props {
   keybinding: Array<string> | null
   shadow: boolean
   overlay: boolean
-  options: Fuse.IFuseOptions<string>
+  nestedSearch: boolean
+  fuseOptions: Fuse.IFuseOptions<string>
   actions: Array<ItemData>
   placeholder: string
 }
@@ -126,8 +127,14 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			required: false,
 			default: true
 		},
-		// additional options to pass to Fuse
-		options: {
+		// search nested actions
+		nestedSearch: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
+		// additional fuseOptions to pass to Fuse
+		fuseOptions: {
 			type: Object,
 			required: false,
 			default: () => ({})
@@ -203,8 +210,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			}
 
 			const list = (this.$refs['omnibar-search'] as HTMLInputElement)
-
-			console.log(list)
 
 			if (key === 'ArrowDown') {
 				if (currentIndex + 1 === items.length) {
@@ -360,9 +365,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				minMatchCharLength: 1,
 				ignoreLocation: true,
 				keys: [
-					'text'
+					'text',
+					'keywords',
+					...(this.nestedSearch ? ['childActions.text', 'childActions.keywords'] : [])
 				],
-				...this.options
+				threshold: 0.3,
+				...this.fuseOptions
 			})
 
 			const indexes = fuse.search(this.search)
