@@ -1,0 +1,117 @@
+<template>
+  <div id="app">
+    <CommandMenu :actions="commandItems">
+      <template v-slot:icon="{ icon }">
+        <span>x {{ icon }}</span>
+      </template>
+    </CommandMenu>
+    <div class="container">
+      <button type="button" @click.prevent="$root.$emit('openCommandMenu')">Show</button>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue';
+import CommandMenu from '@/command.vue';
+import Test from './test.vue';
+
+export default Vue.extend({
+  name: 'ServeDev',
+  components: {
+    CommandMenu
+  },
+  data() {
+    return {}
+  },
+  computed: {
+    commandItems() {
+			return [
+				{
+					id: 'create-note',
+					keybindings: [ '+' ],
+					text: 'Create a new note',
+					tag: 'New Note',
+          icon: Test,
+					placeholder: 'Enter a name for your note',
+					action: (val: string) => {
+						 alert(val)
+					}
+				},
+				{
+					id: 'open-note',
+          icon: 'document',
+					keybindings: [ 'o' ],
+					text: 'Open another note',
+					tag: 'Open Note',
+					placeholder: 'Name of the note',
+          action: (val: string) => {
+						 alert(val)
+					}
+				},
+				{
+					id: 'focus-mode',
+					keybindings: [ 'f' ],
+					text: 'Toggle focus mode',
+					action: () => {
+						 alert('Focus mode')
+					}
+				},
+				{
+					id: 'delete-note',
+					keybindings: [ 'd' ],
+					text: 'Delete this note',
+					childTitle: 'Are you sure you want to delete this note?',
+					childActions: [
+						{
+							icon: 'check',
+							id: 'yes',
+							text: 'Confirm',
+							action: () => {
+                alert('true')
+              }
+						},
+						{
+							icon: 'close',
+							id: 'no',
+							text: 'Cancel',
+							action: () => {
+                alert('true')
+              }
+						}
+					]
+				},
+				{
+					id: 'copy-link',
+					text: 'Copy link',
+					keybindings: [ 'u' ],
+					action: () => {
+						alert('Copy link')
+					}
+				},
+				{
+					id: 'go-home',
+					text: 'Go home',
+					keybindings: [ 'backspace' ],
+					action: () => {
+						window.location.pathname = '/'
+					}
+				}
+			]
+		},
+  }
+});
+</script>
+
+<style type="text/css">
+html {
+  font-family: Inter UI, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+</style>
