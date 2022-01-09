@@ -1,7 +1,8 @@
 import _Vue, { PluginFunction, VueConstructor } from 'vue';
 
 // Import vue component
-import component from '@/command.vue';
+import component from './command.vue';
+import { Action as ActionType } from '@/types'
 
 // Define typescript interfaces for autoinstaller
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,6 +45,8 @@ if ('false' === process.env.ES_BUILD) {
 // to be registered via Vue.use() as well as Vue.component()
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (component as any as InstallableComponent).install = install;
+
+export type Action = ActionType
 
 // Export component by default
 export default component;

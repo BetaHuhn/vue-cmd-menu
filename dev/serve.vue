@@ -1,10 +1,6 @@
 <template>
   <div id="app">
-    <CommandMenu :actions="commandItems">
-      <template v-slot:icon="{ icon }">
-        <span>x {{ icon }}</span>
-      </template>
-    </CommandMenu>
+    <CommandMenu :actions="commandItems"></CommandMenu>
     <div class="container">
       <h1>Command Menu</h1>
       <button type="button" @click.prevent="$root.$emit('openCommandMenu')">Show</button>
@@ -15,7 +11,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import CommandMenu from '@/command.vue';
-import Test from './test.vue';
+import { Action } from '../command'
+// import AddIcon from './AddIcon.vue';
 
 export default Vue.extend({
   name: 'ServeDev',
@@ -26,27 +23,26 @@ export default Vue.extend({
     return {}
   },
   computed: {
-    commandItems() {
+    commandItems(): Action[] {
 			return [
 				{
 					id: 'create-note',
 					keybindings: [ '+' ],
 					text: 'Create a new note',
 					tag: 'New Note',
-          icon: Test,
+          // icon: AddIcon,
 					placeholder: 'Enter a name for your note',
-					action: (val: string) => {
+					action: (val) => {
 						 alert(val)
 					}
 				},
 				{
 					id: 'open-note',
-          icon: 'document',
 					keybindings: [ 'o' ],
 					text: 'Open another note',
 					tag: 'Open Note',
 					placeholder: 'Name of the note',
-          action: (val: string) => {
+          action: (val) => {
 						 alert(val)
 					}
 				},

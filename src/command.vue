@@ -58,15 +58,14 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable no-unused-vars */
 import Vue from 'vue'
 import Fuse from 'fuse.js'
 
-type ItemData = any | Record<string, any>
+import { Action } from './types'
 
 interface Data {
   search: string
-  results: Array<ItemData>
+  results: Array<Action>
   keys: Record<string, boolean>
   open: boolean
   currentItem?: any
@@ -79,9 +78,9 @@ interface Methods {
   openOmnibar(id?: string): void
   closeOmnibar(): void
   handleInput(e: KeyboardEvent): void
-  openChild(item: ItemData): void
+  openChild(item: Action): void
   handleOverlayClick(e: MouseEvent): void
-  handleClick(item: ItemData): void
+  handleClick(item: Action): void
 }
 
 interface Computed {}
@@ -93,7 +92,7 @@ interface Props {
   overlay: boolean
   nestedSearch: boolean
   fuseOptions: Fuse.IFuseOptions<string>
-  actions: Array<ItemData>
+  actions: Array<Action>
   placeholder: string
 }
 
@@ -320,6 +319,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 			if (id) {
 				const item = this.actions.find((item: any) => item.id === id)
+				if (!item) return
 
 				this.openChild(item)
 			}
@@ -386,7 +386,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				this.closeOmnibar()
 			}
 		},
-		openChild(item: ItemData) {
+		openChild(item: Action) {
 			this.currentItem = item
 
 			if (item.childActions) {
@@ -402,7 +402,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				})
 			}
 		},
-		handleClick(item: ItemData) {
+		handleClick(item: Action) {
 			this.$emit('click', item)
 
 			if (item.tag || item.childTitle) {

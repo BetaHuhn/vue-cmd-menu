@@ -305,6 +305,17 @@ yarn run build
 yarn run lint
 ```
 
+## 📋 Todo
+
+- [ ] Standardize parameter of Action handler
+- [ ] Don't hard code meta key for keybindings
+- [ ] Add options to change styling
+- [ ] Light mode
+- [ ] Animations
+- [ ] Hook to add actions dynamicly
+- [ ] Improve naming of properties and options
+- [ ] Vue 3 support
+
 ## ❔ About
 
 This project was developed by me ([@betahuhn](https://github.com/BetaHuhn)) in my free time. If you want to support me:
