@@ -305,7 +305,7 @@ yarn run build
 yarn run lint
 ```
 
-## 📋 Todo
+## 📋 To Do
 
 - [ ] Standardize parameter of Action handler
 - [ ] Don't hard code meta key for keybindings
@@ -314,6 +314,8 @@ yarn run lint
 - [ ] Animations
 - [ ] Hook to add actions dynamicly
 - [ ] Improve naming of properties and options
+- [ ] Keep focus on input when navigating through list
+- [ ] Limit modal height and add scrollbar
 - [ ] Vue 3 support
 
 ## ❔ About
