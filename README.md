@@ -296,7 +296,7 @@ The actual source code of this library is in the `src` folder.
 yarn install
 
 # serve app with hot reload
-yarn run serve
+yarn run dev
 
 # build electron application for production
 yarn run build
