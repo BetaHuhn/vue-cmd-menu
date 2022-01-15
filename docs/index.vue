@@ -18,20 +18,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import CommandMenu from '@/command.vue';
-import { Action } from '../command'
-import ThemeIcon from './ThemeIcon.vue';
-import BlurIcon from './BlurIcon.vue';
-import GitHubIcon from './GitHubIcon.vue';
-import DocsIcon from './DocsIcon.vue';
-import DocsSearchIcon from './DocsSearchIcon.vue';
-import ConfirmIcon from './ConfirmIcon.vue';
-import InputIcon from './InputIcon.vue';
-import SearchIcon from './SearchIcon.vue';
-import HomeIcon from './HomeIcon.vue';
-import ContactIcon from './ContactIcon.vue';
+import { Action } from '@/types'
+import { Home, Theme, Blur, GitHub, Docs, DocsSearch, Confirm, Input, Search, Contact } from './Icons';
 
 export default Vue.extend({
-  name: 'ServeDev',
+  name: 'Landing',
   components: {
     CommandMenu
   },
@@ -48,7 +39,7 @@ export default Vue.extend({
 					id: 'home',
 					section: 'Navigation',
 					text: 'Home',
-          			icon: HomeIcon,
+          			icon: Home,
 					action: () => {
 						window.location.pathname = '/'
 					}
@@ -57,7 +48,7 @@ export default Vue.extend({
 					id: 'docs',
 					section: 'Navigation',
 					text: 'Docs',
-          			icon: DocsIcon,
+          			icon: Docs,
 					action: () => {
 						window.location.pathname = '/docs'
 					}
@@ -66,7 +57,7 @@ export default Vue.extend({
 					id: 'contact',
 					section: 'Navigation',
 					text: 'Contact',
-          			icon: ContactIcon,
+          			icon: Contact,
 					action: () => {
 						window.location.pathname = '/contact'
 					}
@@ -75,14 +66,14 @@ export default Vue.extend({
 					id: 'github',
 					section: 'Navigation',
 					text: 'GitHub',
-          			icon: GitHubIcon,
+          			icon: GitHub,
 					action: () => {
 						window.location.href = 'https://github.com/BetaHuhn/vue-command-menu'
 					}
 				},
 				{
 					id: 'search-docs',
-					icon: DocsSearchIcon,
+					icon: DocsSearch,
 					keybindings: [ 's' ],
 					section: 'Documentation',
 					text: 'Search Docs',
@@ -107,7 +98,7 @@ export default Vue.extend({
 				},
 				{
 					id: 'confirm',
-					icon: ConfirmIcon,
+					icon: Confirm,
 					text: 'Confirm example',
 					section: 'Examples',
 					childTitle: 'Are you sure?',
@@ -130,7 +121,7 @@ export default Vue.extend({
 				},
 				{
 					id: 'input',
-					icon: InputIcon,
+					icon: Input,
 					text: 'Input example',
 					section: 'Examples',
 					tag: 'Enter name',
@@ -141,7 +132,7 @@ export default Vue.extend({
 				},
 				{
 					id: 'child-actions',
-					icon: SearchIcon,
+					icon: Search,
 					text: 'Child actions example',
 					section: 'Examples',
 					tag: 'Actions',
@@ -166,7 +157,7 @@ export default Vue.extend({
 				{
 					id: 'change-theme',
 					text: 'Toggle theme',
-					icon: ThemeIcon,
+					icon: Theme,
 					section: 'Preferences',
 					keybindings: [ 't' ],
 					preventClose: true,
@@ -177,7 +168,7 @@ export default Vue.extend({
 				{
 					id: 'toggle-blur',
 					text: 'Toggle blur',
-					icon: BlurIcon,
+					icon: Blur,
 					section: 'Preferences',
 					keybindings: [ 'b' ],
 					preventClose: true,
