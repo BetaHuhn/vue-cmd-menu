@@ -5,8 +5,11 @@
       :ref="name"
       class="omnibar"
       :data-name="name"
-      :class="{ 'omnibar-shadow': shadow, 'omnibar-overlay': overlay }"
+      :class="{ 'omnibar-shadow': shadow, 'omnibar-blur': blur, 'omnibar-overlay': overlay }"
       @click="handleOverlayClick($event)"
+	  :style="`--cmd-theme: ${ theme }`"
+	  :data-theme="theme"
+	  :data-blur="blur"
     >
       <div class="omnibar-inside">
 		<slot name="header"></slot>
@@ -94,6 +97,8 @@ interface Props {
   fuseOptions: Fuse.IFuseOptions<string>
   actions: Array<Action>
   placeholder: string
+  theme: string
+  blur: boolean
 }
 
 // selector list for elements that can be focused
@@ -148,6 +153,16 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			type: String,
 			required: false,
 			default: 'Type a command or search'
+		},
+		theme: {
+			type: String,
+			required: false,
+			default: 'light'
+		},
+		blur: {
+			type: Boolean,
+			required: false,
+			default: true
 		}
 	},
 	data() {
@@ -422,7 +437,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 			if (item.action) {
 				item.action(item)
-				this.closeOmnibar()
+
+				if (item.preventClose !== true) {
+					this.closeOmnibar()
+				}
 			}
 		}
 	}
@@ -433,18 +451,46 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 body.omnibar-block-scrolling {
 	 overflow: hidden;
 }
- .omnibar {
-	 /* Colors */
-    --background: #2B2E3B;
-    --background-2nd: #22232D;
-    --background-light: #383b4b;
+
+.omnibar[data-theme=dark] {
+    --background: rgb(43, 46, 59);
+    --background-2nd: rgb(38, 39, 49);
+    --background-light: rgb(34, 36, 43);
+	--background-overlay: rgba(0, 0, 0, 0.5);
 
     --text: #BAC0DC;
     --text-light: #CFD2E3;
     --text-dark:#7B809F;
 
     --accent: #7387C9;
+}
 
+.omnibar[data-theme=dark][data-blur=true] {
+	--background: rgb(43, 46, 59, 0.90);
+    --background-2nd: rgb(34, 35, 45, 0.80);
+    --background-light: rgba(32, 35, 46, 0.75);
+}
+
+.omnibar[data-theme=light] {
+    --background: rgba(255, 255, 255);
+    --background-2nd: rgb(236, 236, 236);
+    --background-light: rgb(226, 226, 226);
+	--background-overlay: rgba(163, 163, 163, 0.5);
+
+    --text: #444;
+    --text-light: #111;
+    --text-dark:#666;
+
+    --accent: #7387C9;
+}
+
+.omnibar[data-theme=light][data-blur=true] {
+	--background: rgba(255, 255, 255, 0.75);
+    --background-2nd: rgba(183, 183, 183, 0.40);
+    --background-light: rgba(181, 181, 181, 0.40);
+}
+
+.omnibar {
     /* Values */
     --border-radius: 8px;
     --click-scale-factor: 0.95;
@@ -468,10 +514,13 @@ body.omnibar-block-scrolling {
 	 opacity: 0;
 }
  .omnibar.omnibar-overlay {
-	 background-color: rgba(0, 0, 0, 0.5);
+	 background-color: var(--background-overlay);
 }
  .omnibar.omnibar-shadow .omnibar-inside {
 	 box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.omnibar.omnibar-blur .omnibar-inside {
+	 backdrop-filter: blur(15px) brightness(1.5);
 }
  .omnibar-inside {
 	 padding: 0;
@@ -493,9 +542,10 @@ body.omnibar-block-scrolling {
  .omnibar-tag {
 	 border-radius: var(--border-radius);
 	 padding: 0.5rem 0.8rem;
-	 background: var(--background-2nd);
+	 background: var(--background-light);
 	 margin-right: -0.5rem;
 	 margin-left: 0.5rem;
+	 font-weight: 500;
 }
  .omnibar-tag p {
 	 margin: 0;
@@ -523,6 +573,7 @@ body.omnibar-block-scrolling {
 	 box-sizing: border-box;
 	 color: var(--text-dark);
 	 text-decoration: none;
+	 border-left: 2px solid transparent;
 }
  .omnibar-search-list a p {
 	 margin: 0;
@@ -534,6 +585,7 @@ body.omnibar-block-scrolling {
 	 outline: 0;
 	 background: var(--background-2nd);
 	 color: var(--text);
+	 border-left: 2px solid var(--text);
 }
  .omnibar-footer {
 	 border-top: 1px solid var(--background-2nd);

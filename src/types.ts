@@ -21,6 +21,8 @@ export type Action = {
 	placeholder?: string
     /** Value to insert into the search field when the action is selected  */
 	value?: string
+    /** Prevent the command menu from closing itself after an action is completed  */
+	preventClose?: boolean
     /** Display a title instead of the input field when the action is selected  */
 	childTitle?: string
     /** Child actions to show once the action is selected   */
