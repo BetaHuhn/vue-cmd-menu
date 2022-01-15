@@ -27,12 +27,12 @@
     "command.d.ts"
   ],
   "scripts": {
-    "dev": "vue-cli-service serve docs/index.ts",
-    "build": "cross-env NODE_ENV=production rollup --config rollup.config.js && cp lib/command.min.js docs/command.min.js && npm run build:web",
+    "dev": "nuxt",
+    "build": "cross-env NODE_ENV=production rollup --config rollup.config.js && npm run build:web",
     "build:ssr": "cross-env NODE_ENV=production rollup --config rollup.config.js --format cjs",
     "build:es": "cross-env NODE_ENV=production rollup --config rollup.config.js --format es",
     "build:unpkg": "cross-env NODE_ENV=production rollup --config rollup.config.js --format iife",
-    "build:web": "vue-cli-service build docs/index.ts"
+    "build:web": "nuxt generate"
   },
   "dependencies": {
     "fuse.js": "^6.4.6"
@@ -41,23 +41,29 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
+    "@blokwise/dynamic": "^1.5.0",
+    "@nuxt/content": "^1.15.1",
+    "@nuxt/types": "^2.15.8",
+    "@nuxt/typescript-build": "^2.1.0",
     "@rollup/plugin-alias": "^2.2.0",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@rollup/plugin-replace": "^2.3.2",
-    "@vue/cli-plugin-babel": "^4.5.10",
-    "@vue/cli-plugin-typescript": "^4.5.10",
-    "@vue/cli-service": "^4.5.10",
+    "core-js": "^3.19.3",
     "cross-env": "^7.0.3",
     "lodash-es": "^4.17.20",
     "minimist": "^1.2.5",
+    "nuxt": "^2.15.8",
     "rollup": "^2.37.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-vue": "^5.1.6",
-    "typescript": "^3.9.7",
-    "vue": "^2.6.11",
-    "vue-template-compiler": "^2.6.11"
+    "ts-loader": "^8.1.0",
+    "typescript": "^4.5.4",
+    "vue": "^2.6.14",
+    "vue-server-renderer": "^2.6.14",
+    "vue-template-compiler": "^2.6.14",
+    "webpack": "^4.46.0"
   },
   "peerDependencies": {
     "vue": "^2.6.11"

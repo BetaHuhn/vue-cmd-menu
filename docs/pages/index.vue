@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <CommandMenu :actions="commandItems" :theme="theme" :blur="blur"></CommandMenu>
+    <CommandMenu :actions="commandItems" :theme="theme" :blur="blur">
+      <template v-slot:icon="{ icon }">
+        <Icon :name="icon" />
+      </template>
+    </CommandMenu>
     <div class="container">
 		<h1>Vue Command Menu</h1>
 		<p>Build beautiful and extensible Command + k menus with Vue</p>
@@ -17,9 +21,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import CommandMenu from '@/command.vue';
-import { Action } from '@/types'
-import { Home, Theme, Blur, GitHub, Docs, DocsSearch, Confirm, Input, Search, Contact } from './Icons';
+import CommandMenu from '../../src/command.vue';
+import { Action } from '../../src/types'
 
 export default Vue.extend({
   name: 'Landing',
@@ -39,7 +42,7 @@ export default Vue.extend({
 					id: 'home',
 					section: 'Navigation',
 					text: 'Home',
-          			icon: Home,
+          icon: 'home',
 					action: () => {
 						window.location.pathname = '/'
 					}
@@ -48,7 +51,7 @@ export default Vue.extend({
 					id: 'docs',
 					section: 'Navigation',
 					text: 'Docs',
-          			icon: Docs,
+          icon: 'docs',
 					action: () => {
 						window.location.pathname = '/docs'
 					}
@@ -57,7 +60,7 @@ export default Vue.extend({
 					id: 'contact',
 					section: 'Navigation',
 					text: 'Contact',
-          			icon: Contact,
+          icon: 'contact',
 					action: () => {
 						window.location.pathname = '/contact'
 					}
@@ -66,14 +69,14 @@ export default Vue.extend({
 					id: 'github',
 					section: 'Navigation',
 					text: 'GitHub',
-          			icon: GitHub,
+          icon: 'GitHub',
 					action: () => {
 						window.location.href = 'https://github.com/BetaHuhn/vue-command-menu'
 					}
 				},
 				{
 					id: 'search-docs',
-					icon: DocsSearch,
+					icon: 'docsSearch',
 					keybindings: [ 's' ],
 					section: 'Documentation',
 					text: 'Search Docs',
@@ -98,7 +101,7 @@ export default Vue.extend({
 				},
 				{
 					id: 'confirm',
-					icon: Confirm,
+					icon: 'confirm',
 					text: 'Confirm example',
 					section: 'Examples',
 					childTitle: 'Are you sure?',
@@ -121,7 +124,7 @@ export default Vue.extend({
 				},
 				{
 					id: 'input',
-					icon: Input,
+					icon: 'input',
 					text: 'Input example',
 					section: 'Examples',
 					tag: 'Enter name',
@@ -132,7 +135,7 @@ export default Vue.extend({
 				},
 				{
 					id: 'child-actions',
-					icon: Search,
+					icon: 'search',
 					text: 'Child actions example',
 					section: 'Examples',
 					tag: 'Actions',
@@ -157,7 +160,7 @@ export default Vue.extend({
 				{
 					id: 'change-theme',
 					text: 'Toggle theme',
-					icon: Theme,
+					icon: 'theme',
 					section: 'Preferences',
 					keybindings: [ 't' ],
 					preventClose: true,
@@ -168,7 +171,7 @@ export default Vue.extend({
 				{
 					id: 'toggle-blur',
 					text: 'Toggle blur',
-					icon: Blur,
+					icon: 'blur',
 					section: 'Preferences',
 					keybindings: [ 'b' ],
 					preventClose: true,
