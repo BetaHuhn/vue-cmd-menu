@@ -36,7 +36,7 @@
           <slot name="results" v-bind="{ data: items }">
             <div v-for="(section, name) in sections" :key="name" class="omnibar-search-list">
 				<div v-if="name !== '_all'" class="section">{{ name }}</div>
-				<a v-for="item in section" :key="item.id" href="#" @click.prevent="handleClick(item)">
+				<a v-for="item in section" :key="item.id" href="#" @click.prevent="handleClick(item)" @mouseover="$event.target.focus()">
 					<div v-if="item.icon" class="icon">
 						<component v-if="typeof item.icon === 'function'" v-bind:is="item.icon"></component>
 						<slot v-else name="icon" :icon="item.icon">
@@ -213,8 +213,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				return pre
 			}, {} as any)
 
-			console.log(data)
-
 			return data
 		}
 	},
@@ -370,7 +368,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 			// nextTick if after v-if transition is done
 			this.$nextTick(() => {
-				document.body.classList.add('omnibar-block-scrolling')
+				document.body.style.overflow = 'hidden';
 
 				// Prefill the search input with an optional value
 				if (this.currentItem && this.currentItem.value) {
@@ -389,7 +387,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			this.search = ''
 			this.results = []
 			this.currentItem = undefined
-			document.body.classList.remove('omnibar-block-scrolling')
+			document.body.style.overflow = 'unset';
 		},
 		handleInput(e: KeyboardEvent) {
 			this.search = (e.target as HTMLInputElement).value || ''
@@ -478,10 +476,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 </script>
 
 <style scoped>
-body.omnibar-block-scrolling {
-	 overflow: hidden;
-}
-
 .omnibar[data-theme=dark] {
     --background: rgb(43, 46, 59);
     --background-2nd: rgb(38, 39, 49);
@@ -556,7 +550,7 @@ body.omnibar-block-scrolling {
 	 padding: 0;
 	 background: var(--background);
 	 max-width: 600px;
-	 max-height: 400px;
+	 max-height: min(400px, calc(100vh - 20% - 2rem));
 	 width: 95%;
 	 top: 20%;
 	 left: 50%;
