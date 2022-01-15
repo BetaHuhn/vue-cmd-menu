@@ -4,7 +4,7 @@
         "module": "esnext",
         "strict": true,
         "declaration": true,
-        "declarationDir": "dist",
+        "declarationDir": "lib",
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "importHelpers": true,
@@ -32,6 +32,7 @@
     },
     "exclude": [
         "node_modules",
-        "dist"
+        "dist",
+        "lib"
     ]
 }

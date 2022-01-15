@@ -310,13 +310,13 @@ yarn run lint
 - [ ] Standardize parameter of Action handler
 - [ ] Don't hard code meta key for keybindings
 - [ ] Add options to change styling
-- [ ] Sections
-- [ ] Light mode
+- [x] Sections
+- [x] Light mode
 - [ ] Animations
 - [ ] Hook to add actions dynamicly
 - [ ] Improve naming of properties and options
 - [ ] Keep focus on input when navigating through list
-- [ ] Limit modal height and add scrollbar
+- [x] Limit modal height and add scrollbar
 - [ ] Async actions and loading states
 - [ ] Use slot to customize the rendering of the results
 - [ ] Vue 3 support

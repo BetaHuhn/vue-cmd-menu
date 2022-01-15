@@ -71,7 +71,7 @@ if (!argv.format || argv.format === 'es') {
     ...baseConfig,
     external,
     output: {
-      file: 'dist/command.esm.js',
+      file: 'lib/command.esm.js',
       format: 'esm',
       exports: 'named',
     },
@@ -105,7 +105,7 @@ if (!argv.format || argv.format === 'cjs') {
     external,
     output: {
       compact: true,
-      file: 'dist/command.ssr.js',
+      file: 'lib/command.ssr.js',
       format: 'cjs',
       name: 'CommandMenu',
       exports: 'named',
@@ -134,7 +134,7 @@ if (!argv.format || argv.format === 'iife') {
     external,
     output: {
       compact: true,
-      file: 'dist/command.min.js',
+      file: 'lib/command.min.js',
       format: 'iife',
       name: 'CommandMenu',
       exports: 'named',

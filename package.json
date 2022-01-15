@@ -28,10 +28,11 @@
   ],
   "scripts": {
     "serve": "vue-cli-service serve dev/serve.ts",
-    "build": "cross-env NODE_ENV=production rollup --config rollup.config.js && cp dist/command.min.js docs/command.min.js",
+    "build": "cross-env NODE_ENV=production rollup --config rollup.config.js && cp lib/command.min.js docs/command.min.js && npm run build:web",
     "build:ssr": "cross-env NODE_ENV=production rollup --config rollup.config.js --format cjs",
     "build:es": "cross-env NODE_ENV=production rollup --config rollup.config.js --format es",
-    "build:unpkg": "cross-env NODE_ENV=production rollup --config rollup.config.js --format iife"
+    "build:unpkg": "cross-env NODE_ENV=production rollup --config rollup.config.js --format iife",
+    "build:web": "vue-cli-service build dev/serve.ts"
   },
   "dependencies": {
     "fuse.js": "^6.4.6"
