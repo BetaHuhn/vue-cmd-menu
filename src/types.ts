@@ -11,6 +11,8 @@ export type Action = {
 	action?: (value?: string | Action) => any
     /** Icon to show before the text in the UI  */
 	icon?: string | Vue.Component
+    /** Section to group the action in  */
+	section?: string
     /** Keywords to match the action when searching  */
     keywords?: string[]
     /** Keyboard shortcuts to attach to this action  */

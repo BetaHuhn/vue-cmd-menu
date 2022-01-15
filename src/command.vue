@@ -33,20 +33,21 @@
           />
         </div>
         <div v-if="!currentItem || results.length > 0" ref="omnibar-search-list" class="omnibar-search-list-wrapper" @keyup="handleArrowKeys($event)">
-          <slot name="results" v-bind="{ data: results.length > 0 ? results : actions }">
-            <div v-for="item in (results.length > 0 ? results : actions)" :key="item.id" class="omnibar-search-list">
-              <a href="#" @click.prevent="handleClick(item)">
-				<div v-if="item.icon" class="icon">
-					<component v-if="typeof item.icon === 'function'" v-bind:is="item.icon"></component>
-					<slot v-else name="icon" :icon="item.icon">
-						<component v-bind:is="item.icon"></component>
-					</slot>
-				</div>
-                <p>{{ item.text }}</p>
-                <div v-if="item.keybindings" class="keybindings">
-                  <span v-for="key in ['⌘', ...item.keybindings]" :key="key" class="keybinding">{{ key }}</span>
-                </div>
-              </a>
+          <slot name="results" v-bind="{ data: items }">
+            <div v-for="(section, name) in sections" :key="name" class="omnibar-search-list">
+				<div v-if="name !== '_all'" class="section">{{ name }}</div>
+				<a v-for="item in section" :key="item.id" href="#" @click.prevent="handleClick(item)">
+					<div v-if="item.icon" class="icon">
+						<component v-if="typeof item.icon === 'function'" v-bind:is="item.icon"></component>
+						<slot v-else name="icon" :icon="item.icon">
+							<component v-bind:is="item.icon"></component>
+						</slot>
+					</div>
+					<p>{{ item.text }}</p>
+					<div v-if="item.keybindings" class="keybindings">
+					<span v-for="key in ['⌘', ...item.keybindings]" :key="key" class="keybinding">{{ key }}</span>
+					</div>
+				</a>
             </div>
           </slot>
         </div>
@@ -86,7 +87,10 @@ interface Methods {
   handleClick(item: Action): void
 }
 
-interface Computed {}
+interface Computed {
+	items: Array<Action>
+	sections: Record<string, Array<Action>>
+}
 
 interface Props {
   name: string | boolean | null
@@ -188,6 +192,31 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 		this.$root.$on(evtOpen, this.openOmnibar)
 		const evtClose = this.name ? `closeCommandMenu.${ this.name }` : 'closeCommandMenu'
 		this.$root.$on(evtClose, this.closeOmnibar)
+	},
+	computed: {
+		items() {
+			if (this.search) {
+				return this.results
+			}
+
+			return this.actions
+		},
+		sections() {
+			const items = this.search || this.currentItem ? this.results : this.actions
+
+			const data = items.reduce((pre, cur) => {
+				if (!cur.section) cur.section = '_all'
+				if (!(cur.section in pre)) pre[cur.section] = []
+
+				pre[cur.section].push(cur)
+
+				return pre
+			}, {} as any)
+
+			console.log(data)
+
+			return data
+		}
 	},
 	methods: {
 		handleArrowKeys(e: KeyboardEvent) {
@@ -382,6 +411,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				keys: [
 					'text',
 					'keywords',
+					'section',
 					...(this.nestedSearch ? ['childActions.text', 'childActions.keywords'] : [])
 				],
 				threshold: 0.3,
@@ -525,13 +555,16 @@ body.omnibar-block-scrolling {
  .omnibar-inside {
 	 padding: 0;
 	 background: var(--background);
-	 max-width: 35rem;
+	 max-width: 600px;
+	 max-height: 400px;
 	 width: 95%;
 	 top: 20%;
 	 left: 50%;
 	 transform: translateX(-50%);
 	 position: absolute;
 	 z-index: 2;
+	 display: flex;
+	 flex-direction: column;
 	 border-radius: var(--border-radius);
 }
  .omnibar-head {
@@ -564,12 +597,13 @@ body.omnibar-block-scrolling {
 }
  .omnibar-search-list-wrapper {
 	 border-top: 1px solid var(--background-2nd);
+	 overflow-y: auto;
 }
  .omnibar-search-list a {
 	 display: flex;
 	 align-items: center;
 	 width: 100%;
-	 padding: 0.5rem 1rem;
+	 padding: 0.6rem 1rem;
 	 box-sizing: border-box;
 	 color: var(--text-dark);
 	 text-decoration: none;
@@ -579,7 +613,8 @@ body.omnibar-block-scrolling {
 	 margin: 0;
 }
  .omnibar-search-list a .icon {
-	 margin-right: 0.8rem;
+	 margin-right: 0.5rem;
+	 display: flex;
 }
  .omnibar-search-list a:focus {
 	 outline: 0;
@@ -587,6 +622,13 @@ body.omnibar-block-scrolling {
 	 color: var(--text);
 	 border-left: 2px solid var(--text);
 }
+ .omnibar-search-list .section {
+	 font-size: 0.8rem;
+	 padding: 0.2rem 1rem;
+	 box-sizing: border-box;
+	 color: var(--text-dark);
+	 margin-top: 0.5rem;
+ }
  .omnibar-footer {
 	 border-top: 1px solid var(--background-2nd);
 	 font-size: 0.8rem;

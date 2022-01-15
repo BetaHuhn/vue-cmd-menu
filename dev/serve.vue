@@ -2,11 +2,15 @@
   <div id="app">
     <CommandMenu :actions="commandItems" :theme="theme" :blur="blur"></CommandMenu>
     <div class="container">
-      <h1>Command Menu</h1>
-      <button type="button" @click.prevent="$root.$emit('openCommandMenu')">Show</button>
-	  <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" />
-	  <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80" />
-	  <img src="https://images.unsplash.com/photo-1618397746666-63405ce5d015?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80" />
+		<h1>Vue Command Menu</h1>
+		<p>Build beautiful and extensible Command + k menus with Vue</p>
+		<div class="actions">
+			<button type="button" @click.prevent="$root.$emit('openCommandMenu')">Open CMD Menu</button>
+			<p>or use CMD + K</p>
+		</div>
+		<img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" />
+		<img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80" />
+		<img src="https://images.unsplash.com/photo-1618397746666-63405ce5d015?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80" />
 	</div>
   </div>
 </template>
@@ -15,7 +19,16 @@
 import Vue from 'vue';
 import CommandMenu from '@/command.vue';
 import { Action } from '../command'
-// import AddIcon from './AddIcon.vue';
+import ThemeIcon from './ThemeIcon.vue';
+import BlurIcon from './BlurIcon.vue';
+import GitHubIcon from './GitHubIcon.vue';
+import DocsIcon from './DocsIcon.vue';
+import DocsSearchIcon from './DocsSearchIcon.vue';
+import ConfirmIcon from './ConfirmIcon.vue';
+import InputIcon from './InputIcon.vue';
+import SearchIcon from './SearchIcon.vue';
+import HomeIcon from './HomeIcon.vue';
+import ContactIcon from './ContactIcon.vue';
 
 export default Vue.extend({
   name: 'ServeDev',
@@ -25,50 +38,81 @@ export default Vue.extend({
   data() {
     return {
 		theme: 'light',
-		blur: false
+		blur: true
 	}
   },
   computed: {
     commandItems(): Action[] {
 			return [
 				{
-					id: 'create-note',
-					keybindings: [ '+' ],
-					text: 'Create a new note',
-					tag: 'New Note',
-          			// icon: AddIcon,
-					placeholder: 'Enter a name for your note',
-					action: (val) => {
-						 alert(val)
-					}
-				},
-				{
-					id: 'open-note',
-					keybindings: [ 'o' ],
-					text: 'Open another note',
-					tag: 'Open Note',
-					placeholder: 'Name of the note',
-          			action: (val) => {
-						 alert(val)
-					}
-				},
-				{
-					id: 'focus-mode',
-					keybindings: [ 'f' ],
-					text: 'Toggle focus mode',
-          			keywords: [ 'test', 'hello' ],
+					id: 'home',
+					section: 'Navigation',
+					text: 'Home',
+          			icon: HomeIcon,
 					action: () => {
-						 alert('Focus mode')
+						window.location.pathname = '/'
 					}
 				},
 				{
-					id: 'delete-note',
-					keybindings: [ 'd' ],
-					text: 'Delete this note',
-					childTitle: 'Are you sure you want to delete this note?',
+					id: 'docs',
+					section: 'Navigation',
+					text: 'Docs',
+          			icon: DocsIcon,
+					action: () => {
+						window.location.pathname = '/docs'
+					}
+				},
+				{
+					id: 'contact',
+					section: 'Navigation',
+					text: 'Contact',
+          			icon: ContactIcon,
+					action: () => {
+						window.location.pathname = '/contact'
+					}
+				},
+				{
+					id: 'github',
+					section: 'Navigation',
+					text: 'GitHub',
+          			icon: GitHubIcon,
+					action: () => {
+						window.location.href = 'https://github.com/BetaHuhn/vue-command-menu'
+					}
+				},
+				{
+					id: 'search-docs',
+					icon: DocsSearchIcon,
+					keybindings: [ 's' ],
+					section: 'Documentation',
+					text: 'Search Docs',
+					tag: 'Docs',
+					placeholder: 'Keyword to search for',
+          			childActions: [
+						{
+							id: 'get-started',
+							text: 'Get started',
+							action: () => {
+								alert('true')
+							}
+						},
+						{
+							id: 'installation',
+							text: 'Installation',
+							action: () => {
+								alert('true')
+							}
+						}
+					]
+				},
+				{
+					id: 'confirm',
+					icon: ConfirmIcon,
+					text: 'Confirm example',
+					section: 'Examples',
+					childTitle: 'Are you sure?',
 					childActions: [
 						{
-							icon: 'check',
 							id: 'yes',
 							text: 'Confirm',
 							action: () => {
@@ -76,7 +120,6 @@ export default Vue.extend({
 							}
 						},
 						{
-							icon: 'close',
 							id: 'no',
 							text: 'Cancel',
 							action: () => {
@@ -86,8 +129,45 @@ export default Vue.extend({
 					]
 				},
 				{
+					id: 'input',
+					icon: InputIcon,
+					text: 'Input example',
+					section: 'Examples',
+					tag: 'Enter name',
+					placeholder: 'Your name',
+					action: (val) => {
+						alert(`Hello ${ val }`)
+					}
+				},
+				{
+					id: 'child-actions',
+					icon: SearchIcon,
+					text: 'Child actions example',
+					section: 'Examples',
+					tag: 'Actions',
+					placeholder: 'Filter',
+					childActions: [
+						{
+							id: 'action1',
+							text: 'Action 1',
+							action: () => {
+								alert('Action 1')
+							}
+						},
+						{
+							id: 'action2',
+							text: 'Action 2',
+							action: () => {
+								alert('Action 2')
+							}
+						}
+					]
+				},
+				{
 					id: 'change-theme',
 					text: 'Toggle theme',
+					icon: ThemeIcon,
+					section: 'Preferences',
 					keybindings: [ 't' ],
 					preventClose: true,
 					action: () => {
@@ -97,26 +177,12 @@ export default Vue.extend({
 				{
 					id: 'toggle-blur',
 					text: 'Toggle blur',
+					icon: BlurIcon,
+					section: 'Preferences',
 					keybindings: [ 'b' ],
 					preventClose: true,
 					action: () => {
 						this.blur = !this.blur
-					}
-				},
-				{
-					id: 'copy-link',
-					text: 'Copy link',
-					keybindings: [ 'u' ],
-					action: () => {
-						alert('Copy link')
-					}
-				},
-				{
-					id: 'go-home',
-					text: 'Go home',
-					keybindings: [ 'backspace' ],
-					action: () => {
-						window.location.pathname = '/'
 					}
 				}
 			]
@@ -137,8 +203,39 @@ html {
   padding: 0 1rem;
 }
 
+.actions {
+	display: flex;
+	align-items: center;
+}
+
+.actions p {
+	color: #747474;
+	margin-left: 0.5rem;
+}
+
+h1 {
+	margin-top: 10rem;
+	margin-bottom: 0.5rem;
+}
+
+button {
+    appearance: none;
+    background: none;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    cursor: pointer;
+    color: #fff;
+    font-family: inherit;
+    background: rgb(27, 27, 27);
+    padding: 0.7rem 0.8rem;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
 img {
 	max-width: 95%;
 	margin-top: 4rem;
+	border-radius: 8px;
 }
 </style>
