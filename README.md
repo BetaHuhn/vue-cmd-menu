@@ -121,6 +121,8 @@ export default Vue.extend({
 - *keybinding*: `Array<string> | null` - combination of keys that need to be pressed (default: `['meta', 'k']`)
 - *shadow*: `boolean` - add a shadow to the view box (default: `true`)
 - *overlay*: `boolean` - show an overlay under the view box (default: `true`)
+- *theme*: `string` - which theme to use, dark or light (default: `light`)
+- *blur*: `boolean` - enable background blur (default: `true`)
 - *nestedSearch*: `boolean` - search/filter nested actions
 - *fuseOptions*: `Fuse.IFuseOptions<string>` - options to pass to Fuse.js ([see options page](https://fusejs.io/api/options.html)) (default: `{}`)
 
@@ -141,12 +143,16 @@ Here are all the options available to an action:
 | name         | description                                                                         | type                                          | required |
 |--------------|-------------------------------------------------------------------------------------|-----------------------------------------------|----------|
 | id           | Internal ID of the action                                                           | string                                        | true     |
-| text        | Text which will be shown for each action in the list                                               | string                                        | true     |
+| text         | Text which will be shown for each action in the list                                | string                                        | true     |
 | action       | Hanlder which will be called when the action is selected                            | function                                      | true     |
-| icon         | Icon to show before the text in the UI                                             | Vue Component/string (only when slot is used) | false    |
+| icon         | Icon to show before the text in the UI                                              | Vue Component/string (only when slot is used) | false    |
+| section      | Section to group the action in                                                      | string                                        | false    |
 | keybindings  | Keystrokes to attach to the action                                                  | string[]                                      | false    |
 | tag          | Tag to show before the input field after the action is selected                     | string                                        | false    |
 | placeholder  | Placeholder to show when waiting for user input after the parent action is selected | string                                        | false    |
+| value        | Value to insert into the search field when the action is selected                   | string                                        | false    |
+| hidden       | Show the action in the result list                                                  | boolean                                       | false    |
+| childTitle   | Display a title instead of the input field when the action is selected              |string                                        | false    |
 | childActions | Array of child actions to show once the action is selected                          | Actions[]                                     | false    |
 
 
