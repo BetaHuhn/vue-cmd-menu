@@ -117,8 +117,7 @@ if (!argv.format || argv.format === 'cjs') {
       vue({
         ...baseConfig.plugins.vue,
         template: {
-          ...baseConfig.plugins.vue.template,
-          optimizeSSR: true,
+          ...baseConfig.plugins.vue.template
         },
       }),
       babel(baseConfig.plugins.babel),

@@ -1,30 +1,30 @@
 <template>
-  <transition name="omnibar-fade">
+  <transition name="cmd-menu-fade">
     <div
       v-if="open"
       :ref="name"
-      class="omnibar"
+      class="cmd-menu"
       :data-name="name"
-      :class="{ 'omnibar-shadow': shadow, 'omnibar-blur': blur, 'omnibar-overlay': overlay }"
+      :class="{ 'cmd-menu-shadow': shadow, 'cmd-menu-blur': blur, 'cmd-menu-overlay': overlay }"
       @click="handleOverlayClick($event)"
 	  :style="`--cmd-theme: ${ theme }`"
 	  :data-theme="theme"
 	  :data-blur="blur"
     >
-      <div class="omnibar-inside">
+      <div class="cmd-menu-inside">
 		<slot name="header"></slot>
-        <div class="omnibar-head">
-          <div v-if="currentItem && currentItem.tag" class="omnibar-tag">
+        <div class="cmd-menu-head">
+          <div v-if="currentItem && currentItem.tag" class="cmd-menu-tag">
             <p>{{ currentItem.tag }}</p>
           </div>
-          <span v-if="currentItem && currentItem.childTitle" class="omnibar-search">{{ currentItem.childTitle }}</span>
+          <span v-if="currentItem && currentItem.childTitle" class="cmd-menu-search">{{ currentItem.childTitle }}</span>
           <input
             v-else
-            id="omnibar-search"
-            ref="omnibar-search"
+            id="cmd-menu-search"
+            ref="cmd-menu-search"
             type="search"
             name="search"
-            class="omnibar-search"
+            class="cmd-menu-search"
             :placeholder="currentItem ? currentItem.placeholder : placeholder"
             autocomplete="off"
             autofocus
@@ -32,14 +32,14 @@
             @keyup="handleArrowKeys($event)"
           />
         </div>
-        <div v-if="!currentItem || results.length > 0" ref="omnibar-search-list" class="omnibar-search-list-wrapper" @keyup="handleArrowKeys($event)">
+        <div v-if="!currentItem || results.length > 0" ref="cmd-menu-search-list" class="cmd-menu-search-list-wrapper" @keyup="handleArrowKeys($event)">
           <slot name="results" v-bind="{ data: items }">
-            <div v-for="(section, name) in sections" :key="name" class="omnibar-search-list">
+            <div v-for="(section, name) in sections" :key="name" class="cmd-menu-search-list">
 				<div v-if="name !== '_all'" class="section">{{ name }}</div>
 				<a v-for="item in section" :key="item.id" href="#" @click.prevent="handleClick(item)" @mouseover="$event.target.focus()">
 					<div v-if="item.icon" class="icon">
-						<component v-if="typeof item.icon === 'function'" v-bind:is="item.icon"></component>
-						<slot v-else name="icon" :icon="item.icon">
+						<component v-if="typeof item.icon == 'object'" v-bind:is="item.icon"></component>
+						<slot v-else name="icon" :icon="item.icon" :id="item.id">
 							<component v-bind:is="item.icon"></component>
 						</slot>
 					</div>
@@ -52,7 +52,7 @@
           </slot>
         </div>
         <slot name="footer">
-			<div class="omnibar-footer">
+			<div class="cmd-menu-footer">
 				<p><span class="keybinding" @click="closeOmnibar">ESC</span> to close</p>
 			</div>
 		</slot>
@@ -80,11 +80,13 @@ interface Methods {
   handleKeyDown(e: KeyboardEvent): void
   handleKeyUp(e: KeyboardEvent): void
   openOmnibar(id?: string): void
+  resetOmnibar(): void
   closeOmnibar(): void
   handleInput(e: KeyboardEvent): void
   openChild(item: Action): void
   handleOverlayClick(e: MouseEvent): void
   handleClick(item: Action): void
+  executeAction(action: (value?: string | Action) => any, item?: string | Action): void
 }
 
 interface Computed {
@@ -199,10 +201,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				return this.results
 			}
 
-			return this.actions
+			return this.actions.filter((item) => item.hidden !== true)
 		},
 		sections() {
-			const items = this.search || this.currentItem ? this.results : this.actions
+			const items = this.search || this.currentItem ? this.results : this.actions.filter((item) => item.hidden !== true)
 
 			const data = items.reduce((pre, cur) => {
 				if (!cur.section) cur.section = '_all'
@@ -218,13 +220,13 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	},
 	methods: {
 		handleArrowKeys(e: KeyboardEvent) {
-			const currentTarget = (this.$refs['omnibar-search-list'] as HTMLElement)
+			const currentTarget = (this.$refs['cmd-menu-search-list'] as HTMLElement)
 
 			if (!currentTarget) {
 				return
 			}
 
-			// prevent scrolling with space and arrow keys when fired on the omnibar
+			// prevent scrolling with space and arrow keys when fired on the cmd-menu
 			if ([ 'Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight' ].includes(e.code)) {
 				e.preventDefault()
 			}
@@ -250,7 +252,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				return
 			}
 
-			const list = (this.$refs['omnibar-search'] as HTMLInputElement)
+			const list = (this.$refs['cmd-menu-search'] as HTMLInputElement)
 
 			if (key === 'ArrowDown') {
 				if (currentIndex + 1 === items.length) {
@@ -288,7 +290,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 					// Execute action directly
 					if (item.tag === undefined && item.action !== undefined) {
-						item.action()
+						this.executeAction(item.action)
 						return
 					}
 
@@ -299,23 +301,21 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 			if (this.open) {
 				// if escape is pressed and the modal is open, and you are not focused on the search input or the input is blank
-				if (key === 'escape' && (document.activeElement !== this.$refs['omnibar-search'] || this.search === '')) {
+				if (key === 'escape' && (document.activeElement !== this.$refs['cmd-menu-search'] || this.search === '')) {
 					this.closeOmnibar()
 				}
 
 				// On backspace remove the current tag
 				if (key === 'backspace' && this.currentItem && this.search.length === 0) {
-					this.currentItem = undefined
-					this.search = ''
-					this.results = [];
-					(this.$refs['omnibar-search'] as HTMLInputElement).focus()
+					this.resetOmnibar();
+					(this.$refs['cmd-menu-search'] as HTMLInputElement).focus()
 					return
 				}
 
-				if (key === 'enter' && (document.activeElement === this.$refs['omnibar-search'])) {
+				if (key === 'enter' && (document.activeElement === this.$refs['cmd-menu-search'])) {
 					// Click on list item if it is the only one left
 					if (this.results.length === 1) {
-						const currentTarget = (this.$refs['omnibar-search-list'] as HTMLElement)
+						const currentTarget = (this.$refs['cmd-menu-search-list'] as HTMLElement)
 						const items = Array.from(currentTarget.querySelectorAll(FOCUSABLE)) as Array<HTMLElement>
 						const item = items[0]
 						item.click()
@@ -328,8 +328,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 							return
 						}
 
-						this.currentItem.action(this.search)
-						this.closeOmnibar()
+						this.executeAction(this.currentItem.action, this.search)
 						return
 					}
 				}
@@ -358,6 +357,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 		},
 		openOmnibar(id) {
 			this.open = true
+			this.$emit('open')
 
 			if (id) {
 				const item = this.actions.find((item: any) => item.id === id)
@@ -372,21 +372,31 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 				// Prefill the search input with an optional value
 				if (this.currentItem && this.currentItem.value) {
-					(this.$refs['omnibar-search'] as HTMLInputElement).value = this.currentItem.value
+					(this.$refs['cmd-menu-search'] as HTMLInputElement).value = this.currentItem.value
 					this.search = this.currentItem.value
 				}
 
 				// timeout so that the keys being pressed are not captured in the focused input
 				setTimeout(() => {
-					(this.$refs['omnibar-search'] as HTMLInputElement).focus()
+					if (this.$refs['cmd-menu-search']) {
+						(this.$refs['cmd-menu-search'] as HTMLInputElement).focus()
+					}
 				})
 			})
 		},
-		closeOmnibar() {
-			this.open = false
+		resetOmnibar() {
+			if (this.$refs['cmd-menu-search']) {
+				(this.$refs['cmd-menu-search'] as HTMLInputElement).value = ''
+			}
+
 			this.search = ''
 			this.results = []
 			this.currentItem = undefined
+		},
+		closeOmnibar() {
+			this.resetOmnibar()
+			this.$emit('close')
+			this.open = false
 			document.body.style.overflow = 'unset';
 		},
 		handleInput(e: KeyboardEvent) {
@@ -425,7 +435,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				[]
 		},
 		handleOverlayClick({ target }) {
-			if ((target as HTMLElement).matches('.omnibar')) {
+			if ((target as HTMLElement).matches('.cmd-menu')) {
 				this.closeOmnibar()
 			}
 		},
@@ -438,7 +448,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 			if (item.childTitle) {
 				this.$nextTick(() => {
-					const currentTarget = (this.$refs['omnibar-search-list'] as HTMLElement)
+					const currentTarget = (this.$refs['cmd-menu-search-list'] as HTMLElement)
 					const items = Array.from(currentTarget.querySelectorAll(FOCUSABLE)) as Array<HTMLElement>
 
 					items[0].focus()
@@ -449,8 +459,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			this.$emit('click', item)
 
 			if (item.tag || item.childTitle) {
-				(this.$refs['omnibar-search'] as HTMLInputElement).focus();
-				(this.$refs['omnibar-search'] as HTMLInputElement).value = item.value || ''
+				(this.$refs['cmd-menu-search'] as HTMLInputElement).focus();
+				(this.$refs['cmd-menu-search'] as HTMLInputElement).value = item.value || ''
 				this.search = item.value || ''
 
 				if (item.childActions) {
@@ -464,11 +474,30 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			}
 
 			if (item.action) {
-				item.action(item)
+				this.executeAction(item.action, item)
+			}
+		},
+		executeAction(action, item: string | Action | undefined) {
+			const res = action(item)
 
-				if (item.preventClose !== true) {
-					this.closeOmnibar()
+			if (res !== undefined && typeof res === 'object' && res.id !== undefined) {
+				this.resetOmnibar()
+				this.currentItem = res
+
+				if (res.value) {
+					(this.$refs['cmd-menu-search'] as HTMLInputElement).value = res.value
+					this.search = res.value;
+
+					(this.$refs['cmd-menu-search'] as HTMLInputElement).focus()
 				}
+
+				return
+			}
+
+			const preventClose = item && typeof item !== 'string' ? item.preventClose || false : false
+
+			if (this.open && !preventClose) {
+				this.closeOmnibar()
 			}
 		}
 	}
@@ -476,7 +505,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 </script>
 
 <style scoped>
-.omnibar[data-theme=dark] {
+.cmd-menu[data-theme=dark] {
     --background: rgb(43, 46, 59);
     --background-2nd: rgb(38, 39, 49);
     --background-light: rgb(34, 36, 43);
@@ -489,13 +518,13 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     --accent: #7387C9;
 }
 
-.omnibar[data-theme=dark][data-blur=true] {
+.cmd-menu[data-theme=dark][data-blur=true] {
 	--background: rgb(43, 46, 59, 0.90);
     --background-2nd: rgb(34, 35, 45, 0.80);
     --background-light: rgba(32, 35, 46, 0.75);
 }
 
-.omnibar[data-theme=light] {
+.cmd-menu[data-theme=light] {
     --background: rgba(255, 255, 255);
     --background-2nd: rgb(236, 236, 236);
     --background-light: rgb(226, 226, 226);
@@ -508,13 +537,13 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     --accent: #7387C9;
 }
 
-.omnibar[data-theme=light][data-blur=true] {
+.cmd-menu[data-theme=light][data-blur=true] {
 	--background: rgba(255, 255, 255, 0.75);
     --background-2nd: rgba(183, 183, 183, 0.40);
     --background-light: rgba(181, 181, 181, 0.40);
 }
 
-.omnibar {
+.cmd-menu {
     /* Values */
     --border-radius: 8px;
     --click-scale-factor: 0.95;
@@ -531,22 +560,22 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	 overscroll-behavior: contain;
 	 color: var(--text);
 }
- .omnibar-fade-enter-active, .omnibar-fade-leave-active {
+ .cmd-menu-fade-enter-active, .cmd-menu-fade-leave-active {
 	 transition: opacity 200ms ease;
 }
- .omnibar-fade-enter, .omnibar-fade-leave-to {
+ .cmd-menu-fade-enter, .cmd-menu-fade-leave-to {
 	 opacity: 0;
 }
- .omnibar.omnibar-overlay {
+ .cmd-menu.cmd-menu-overlay {
 	 background-color: var(--background-overlay);
 }
- .omnibar.omnibar-shadow .omnibar-inside {
+ .cmd-menu.cmd-menu-shadow .cmd-menu-inside {
 	 box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
-.omnibar.omnibar-blur .omnibar-inside {
+.cmd-menu.cmd-menu-blur .cmd-menu-inside {
 	 backdrop-filter: blur(15px) brightness(1.5);
 }
- .omnibar-inside {
+ .cmd-menu-inside {
 	 padding: 0;
 	 background: var(--background);
 	 max-width: 600px;
@@ -561,12 +590,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	 flex-direction: column;
 	 border-radius: var(--border-radius);
 }
- .omnibar-head {
+ .cmd-menu-head {
 	 display: flex;
 	 align-items: center;
 	 width: 100%;
 }
- .omnibar-tag {
+ .cmd-menu-tag {
 	 border-radius: var(--border-radius);
 	 padding: 0.5rem 0.8rem;
 	 background: var(--background-light);
@@ -574,11 +603,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	 margin-left: 0.5rem;
 	 font-weight: 500;
 }
- .omnibar-tag p {
+ .cmd-menu-tag p {
 	 margin: 0;
 	 font-size: 0.8rem;
 }
- .omnibar-search {
+ .cmd-menu-search {
 	 flex-grow: 1;
 	 appearance: none;
 	 background: none;
@@ -589,11 +618,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	 font-family: inherit;
 	 font-size: 1rem;
 }
- .omnibar-search-list-wrapper {
+ .cmd-menu-search-list-wrapper {
 	 border-top: 1px solid var(--background-2nd);
 	 overflow-y: auto;
 }
- .omnibar-search-list a {
+ .cmd-menu-search-list a {
 	 display: flex;
 	 align-items: center;
 	 width: 100%;
@@ -603,60 +632,60 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	 text-decoration: none;
 	 border-left: 2px solid transparent;
 }
- .omnibar-search-list a p {
+ .cmd-menu-search-list a p {
 	 margin: 0;
 }
- .omnibar-search-list a .icon {
+ .cmd-menu-search-list a .icon {
 	 margin-right: 0.5rem;
 	 display: flex;
 }
- .omnibar-search-list a:focus {
+ .cmd-menu-search-list a:focus {
 	 outline: 0;
 	 background: var(--background-2nd);
 	 color: var(--text);
 	 border-left: 2px solid var(--text);
 }
- .omnibar-search-list .section {
+ .cmd-menu-search-list .section {
 	 font-size: 0.8rem;
 	 padding: 0.2rem 1rem;
 	 box-sizing: border-box;
 	 color: var(--text-dark);
 	 margin-top: 0.5rem;
  }
- .omnibar-footer {
+ .cmd-menu-footer {
 	 border-top: 1px solid var(--background-2nd);
 	 font-size: 0.8rem;
 	 color: var(--text-dark);
 }
- .omnibar-footer p {
+ .cmd-menu-footer p {
 	 margin: 0;
 	 padding: 0.5rem 0.5rem;
 }
- .keybindings {
+ .cmd-menu .keybindings {
 	 margin-left: auto;
 	 display: flex;
 	 align-items: center;
 }
- .keybinding {
+ .cmd-menu .keybinding {
 	 background: var(--background-light);
 	 border-radius: 5px;
 	 padding: 0.2rem 0.5rem;
 	 margin-left: 0.5rem;
 	 font-family: monospace;
 }
- input::-webkit-input-placeholder {
+.cmd-menu input::-webkit-input-placeholder {
 	 color: var(--text-dark);
 }
- input::-moz-placeholder {
+.cmd-menu input::-moz-placeholder {
 	 color: var(--text-dark);
 }
- input::-ms-placeholder {
+.cmd-menu input::-ms-placeholder {
 	 color: var(--text-dark);
 }
- input::placeholder {
+.cmd-menu input::placeholder {
 	 color: var(--text-dark);
 }
- ::-webkit-search-cancel-button {
+.cmd-menu ::-webkit-search-cancel-button {
 	 -webkit-appearance: none;
 }
 </style>

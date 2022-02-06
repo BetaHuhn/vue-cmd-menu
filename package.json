@@ -1,6 +1,6 @@
 {
   "name": "vue-cmd-menu",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Build beautiful and extensible Command + k menus with Vue",
   "homepage": "https://github.com/BetaHuhn/vue-cmd-menu#readme",
   "keywords": [
@@ -17,17 +17,19 @@
     "type": "git",
     "url": "git+https://github.com/BetaHuhn/vue-cmd-menu.git"
   },
-  "main": "dist/command.ssr.js",
-  "browser": "dist/command.esm.js",
-  "module": "dist/command.esm.js",
-  "unpkg": "dist/command.min.js",
+  "main": "lib/command.ssr.js",
+  "browser": "lib/command.esm.js",
+  "module": "lib/command.esm.js",
+  "unpkg": "lib/command.min.js",
   "types": "command.d.ts",
   "files": [
     "dist/*",
+    "lib/*",
     "command.d.ts"
   ],
   "scripts": {
     "dev": "nuxt",
+    "dev:ssr": "npm run build:ssr -- --watch",
     "build": "cross-env NODE_ENV=production rollup --config rollup.config.js && npm run build:web",
     "build:ssr": "cross-env NODE_ENV=production rollup --config rollup.config.js --format cjs",
     "build:es": "cross-env NODE_ENV=production rollup --config rollup.config.js --format es",
