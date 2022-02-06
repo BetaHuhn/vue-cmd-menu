@@ -4,7 +4,7 @@ export default {
   srcDir: 'docs/',
 
   head: {
-    title: 'Vue Command Menu',
+    title: 'Vue CMD Menu',
     htmlAttrs: {
       lang: 'en'
     },

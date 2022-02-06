@@ -6,7 +6,7 @@
       </template>
     </CommandMenu>
     <div class="container">
-		<h1>Vue Command Menu</h1>
+		<h1>Vue CMD Menu</h1>
 		<p>Build beautiful and extensible Command + k menus with Vue</p>
 		<div class="actions">
 			<button type="button" @click.prevent="$root.$emit('openCommandMenu')">Open CMD Menu</button>
@@ -71,7 +71,7 @@ export default Vue.extend({
 					text: 'GitHub',
           icon: 'GitHub',
 					action: () => {
-						window.location.href = 'https://github.com/BetaHuhn/vue-command-menu'
+						window.location.href = 'https://github.com/BetaHuhn/vue-cmd-menu'
 					}
 				},
 				{

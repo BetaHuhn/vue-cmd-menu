@@ -1,6 +1,6 @@
 <div align="center">
   
-# Vue Command Menu
+# Vue CMD Menu
 
 Build beautiful and extensible <kbd>Command</kbd> + <kbd>k</kbd> menus with Vue
 
@@ -21,16 +21,16 @@ Build beautiful and extensible <kbd>Command</kbd> + <kbd>k</kbd> menus with Vue
 
 ## 👋 Introduction
 
-vue-command-menu lets you built a beatiful, fast and extensible command menu like the ones you may know from Vercel, GitHub and Linear or MacOS's Spotlight/Raycast. It can be invoked anywhere in your app via <kbd>Command</kbd> + <kbd>k</kbd> to perform actions users would typically be able to do via an interface.
+vue-cmd-menu lets you built a beatiful, fast and extensible command menu like the ones you may know from Vercel, GitHub and Linear or MacOS's Spotlight/Raycast. It can be invoked anywhere in your app via <kbd>Command</kbd> + <kbd>k</kbd> to perform actions users would typically be able to do via an interface.
 
-They sound easy to build, but handling the different interactions, nagivation and state management can quickly become complicated. vue-command-menu provides a simple abstraction over this, simply pass it the actions you want your users to be able to perform and it will handle the rest.
+They sound easy to build, but handling the different interactions, nagivation and state management can quickly become complicated. vue-cmd-menu provides a simple abstraction over this, simply pass it the actions you want your users to be able to perform and it will handle the rest.
 
 ## 🚀 Get started
 
 Install it via NPM:
 
 ```bash
-npm install vue-command-menu
+npm install vue-cmd-menu
 ```
 
 > It currently only supports Vue 2
@@ -39,7 +39,7 @@ npm install vue-command-menu
 
 ```js
 import Vue from 'vue';
-import CommandMenu from 'vue-command-menu';
+import CommandMenu from 'vue-cmd-menu';
 
 Vue.component('CommandMenu', CommandMenu);
 ```
@@ -47,7 +47,7 @@ Vue.component('CommandMenu', CommandMenu);
 ### In Single File Components
 
 ```js
-import CommandMenu from 'vue-command-menu';
+import CommandMenu from 'vue-cmd-menu';
 
 export default {
   // ...
@@ -69,7 +69,7 @@ export default {
 
 <script lang="ts">
 import Vue from 'vue';
-import CommandMenu from 'vue-command-menu';
+import CommandMenu from 'vue-cmd-menu';
 
 export default Vue.extend({
   name: 'CommandMenuExample',
@@ -221,7 +221,7 @@ The shortcut by default listens to the meta key (CMD on Mac, Win on Windows) and
 
 ### Filtering
 
-vue-command-menu uses [Fuse.js](https://fusejs.io/) under the hood to filter the specified actions. This allows for fuzzy searching i.e. the search term doesn't have to be a exact match. By default it searches the action's title and keys defined with the `keywords` property. 
+vue-cmd-menu uses [Fuse.js](https://fusejs.io/) under the hood to filter the specified actions. This allows for fuzzy searching i.e. the search term doesn't have to be a exact match. By default it searches the action's title and keys defined with the `keywords` property. 
 
 If you want to search nested actions as well, enable it with the `nestedSearch` prop.
 

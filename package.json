@@ -1,8 +1,8 @@
 {
-  "name": "vue-command-menu",
+  "name": "vue-cmd-menu",
   "version": "0.1.0",
   "description": "Build beautiful and extensible Command + k menus with Vue",
-  "homepage": "https://github.com/BetaHuhn/vue-command-menu#readme",
+  "homepage": "https://github.com/BetaHuhn/vue-cmd-menu#readme",
   "keywords": [
     "vue",
     "typescript",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BetaHuhn/vue-command-menu.git"
+    "url": "git+https://github.com/BetaHuhn/vue-cmd-menu.git"
   },
   "main": "dist/command.ssr.js",
   "browser": "dist/command.esm.js",
