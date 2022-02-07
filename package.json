@@ -1,6 +1,6 @@
 {
   "name": "vue-cmd-menu",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "Build beautiful and extensible Command + k menus with Vue",
   "homepage": "https://github.com/BetaHuhn/vue-cmd-menu#readme",
   "keywords": [

@@ -12,8 +12,10 @@
 	  :data-blur="blur"
     >
       <div class="cmd-menu-inside">
-		<slot name="header"></slot>
-        <div class="cmd-menu-head">
+		<div class="cmd-menu-header">
+			<slot name="header"></slot>
+		</div>
+        <div class="cmd-menu-search-wrapper">
           <div v-if="currentItem && currentItem.tag" class="cmd-menu-tag">
             <p>{{ currentItem.tag }}</p>
           </div>
@@ -32,9 +34,9 @@
             @keyup="handleArrowKeys($event)"
           />
         </div>
-        <div v-if="!currentItem || results.length > 0" ref="cmd-menu-search-list" class="cmd-menu-search-list-wrapper" @keyup="handleArrowKeys($event)">
+        <div v-if="!currentItem || results.length > 0" ref="cmd-menu-results" class="cmd-menu-results-wrapper" @keyup="handleArrowKeys($event)">
           <slot name="results" v-bind="{ data: items }">
-            <div v-for="(section, name) in sections" :key="name" class="cmd-menu-search-list">
+            <div v-for="(section, name) in sections" :key="name" class="cmd-menu-results">
 				<div v-if="name !== '_all'" class="section">{{ name }}</div>
 				<a v-for="item in section" :key="item.id" href="#" @click.prevent="handleClick(item)" @mouseover="$event.target.focus()">
 					<div v-if="item.icon" class="icon">
@@ -51,11 +53,11 @@
             </div>
           </slot>
         </div>
-        <slot name="footer">
-			<div class="cmd-menu-footer">
+		<div class="cmd-menu-footer">
+			<slot name="footer">
 				<p><span class="keybinding" @click="closeOmnibar">ESC</span> to close</p>
-			</div>
-		</slot>
+			</slot>
+		</div>
       </div>
     </div>
   </transition>
@@ -220,7 +222,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	},
 	methods: {
 		handleArrowKeys(e: KeyboardEvent) {
-			const currentTarget = (this.$refs['cmd-menu-search-list'] as HTMLElement)
+			const currentTarget = (this.$refs['cmd-menu-results'] as HTMLElement)
 
 			if (!currentTarget) {
 				return
@@ -289,7 +291,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 					e.preventDefault()
 
 					// Execute action directly
-					if (item.tag === undefined && item.action !== undefined) {
+					if (item.action !== undefined && item.childActions === undefined && item.childTitle === undefined) {
 						this.executeAction(item.action)
 						return
 					}
@@ -315,7 +317,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				if (key === 'enter' && (document.activeElement === this.$refs['cmd-menu-search'])) {
 					// Click on list item if it is the only one left
 					if (this.results.length === 1) {
-						const currentTarget = (this.$refs['cmd-menu-search-list'] as HTMLElement)
+						const currentTarget = (this.$refs['cmd-menu-results'] as HTMLElement)
 						const items = Array.from(currentTarget.querySelectorAll(FOCUSABLE)) as Array<HTMLElement>
 						const item = items[0]
 						item.click()
@@ -448,7 +450,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 			if (item.childTitle) {
 				this.$nextTick(() => {
-					const currentTarget = (this.$refs['cmd-menu-search-list'] as HTMLElement)
+					const currentTarget = (this.$refs['cmd-menu-results'] as HTMLElement)
 					const items = Array.from(currentTarget.querySelectorAll(FOCUSABLE)) as Array<HTMLElement>
 
 					items[0].focus()
@@ -458,7 +460,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 		handleClick(item: Action) {
 			this.$emit('click', item)
 
-			if (item.tag || item.childTitle) {
+			if (item.childActions || item.childTitle) {
 				(this.$refs['cmd-menu-search'] as HTMLInputElement).focus();
 				(this.$refs['cmd-menu-search'] as HTMLInputElement).value = item.value || ''
 				this.search = item.value || ''
@@ -590,7 +592,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	 flex-direction: column;
 	 border-radius: var(--border-radius);
 }
- .cmd-menu-head {
+.cmd-menu-header {
+	border-bottom: 1px solid var(--background-2nd);
+}
+ .cmd-menu-search-wrapper {
 	 display: flex;
 	 align-items: center;
 	 width: 100%;
@@ -618,11 +623,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	 font-family: inherit;
 	 font-size: 1rem;
 }
- .cmd-menu-search-list-wrapper {
+ .cmd-menu-results-wrapper {
 	 border-top: 1px solid var(--background-2nd);
 	 overflow-y: auto;
 }
- .cmd-menu-search-list a {
+ .cmd-menu-results a {
 	 display: flex;
 	 align-items: center;
 	 width: 100%;
@@ -632,20 +637,20 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 	 text-decoration: none;
 	 border-left: 2px solid transparent;
 }
- .cmd-menu-search-list a p {
+ .cmd-menu-results a p {
 	 margin: 0;
 }
- .cmd-menu-search-list a .icon {
+ .cmd-menu-results a .icon {
 	 margin-right: 0.5rem;
 	 display: flex;
 }
- .cmd-menu-search-list a:focus {
+ .cmd-menu-results a:focus {
 	 outline: 0;
 	 background: var(--background-2nd);
 	 color: var(--text);
 	 border-left: 2px solid var(--text);
 }
- .cmd-menu-search-list .section {
+ .cmd-menu-results .section {
 	 font-size: 0.8rem;
 	 padding: 0.2rem 1rem;
 	 box-sizing: border-box;
