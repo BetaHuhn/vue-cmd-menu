@@ -2,7 +2,7 @@ import _Vue, { PluginFunction, VueConstructor } from 'vue';
 
 // Import vue component
 import component from './command.vue';
-import { Action as ActionType } from '@/types'
+import { Action as ActionType } from './types'
 
 // Define typescript interfaces for autoinstaller
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
