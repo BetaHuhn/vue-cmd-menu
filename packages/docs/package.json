@@ -12,7 +12,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "deploy": "vercel --prod"
+    "deploy": "deta deploy"
   },
   "devDependencies": {
     "@blokwise/dynamic": "^1.5.0",
