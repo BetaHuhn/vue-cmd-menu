@@ -185,7 +185,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" type="text/css">
+<style type="text/css">
 html {
   font-family: Inter UI, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
