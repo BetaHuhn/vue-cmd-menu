@@ -4,9 +4,11 @@
   
 # Vue Command Menu
 
-Build beautiful and extensible <kbd>Command</kbd> + <kbd>k</kbd> menus with Vue
-  
-  <br/>
+Build beautiful and extensible <kbd>⌘</kbd> + <kbd>k</kbd> menus with Vue
+
+[🔮 Demo](https://vue-cmd.deta.dev) - [🚀 Get started](#-get-started) - [📚 Docs](https://vue-cmd.deta.dev/docs)
+
+<br/>
 
 ![image](https://user-images.githubusercontent.com/51766171/158025071-b21f7dde-516d-4442-a59b-66aa42f29d9e.png)
   
@@ -14,7 +16,9 @@ Build beautiful and extensible <kbd>Command</kbd> + <kbd>k</kbd> menus with Vue
 
 </div>
 
-## Features
+## 👋 Introduction
+
+`vue-cmd-menu` lets you built a beatiful, fast and extensible command menu like the ones you may know from Vercel, GitHub and Linear or MacOS's Spotlight/Raycast. It can be invoked anywhere in your app via <kbd>Command</kbd> + <kbd>k</kbd> to perform actions users would typically be able to do via an interface.
 
 - 💅 **Beautiful** by default, easy to style to your liking
 - 🔎 **Built-in filtering** with [Fuse.js](https://fusejs.io/)
@@ -22,12 +26,6 @@ Build beautiful and extensible <kbd>Command</kbd> + <kbd>k</kbd> menus with Vue
 - 🧭 **Easy navigation** with your keyboard or mouse
 - 📁 **Nested actions** for folder like navigation experience
 - 🔩 **Simple data structure** to define and customise actions
-
-## 👋 Introduction
-
-vue-cmd-menu lets you built a beatiful, fast and extensible command menu like the ones you may know from Vercel, GitHub and Linear or MacOS's Spotlight/Raycast. It can be invoked anywhere in your app via <kbd>Command</kbd> + <kbd>k</kbd> to perform actions users would typically be able to do via an interface.
-
-They sound easy to build, but handling the different interactions, nagivation and state management can quickly become complicated. vue-cmd-menu provides a simple abstraction over this, simply pass it the actions you want your users to be able to perform and it will handle the rest.
 
 ## 🚀 Get started
 
@@ -64,6 +62,8 @@ export default {
 
 ## 📚 Usage
 
+While command menus sound easy to build in theory, in practice handling the different interactions, nagivation options and state management can quickly become complicated. `vue-cmd-menu` provides a simple abstraction over this, simply pass it the actions you want your users to be able to perform and it will handle the rest.
+
 ```html
 <template>
   <div id="app">
@@ -76,7 +76,6 @@ import Vue from 'vue';
 import CommandMenu from 'vue-cmd-menu';
 
 export default Vue.extend({
-  name: 'CommandMenuExample',
   components: {
     CommandMenu
   },

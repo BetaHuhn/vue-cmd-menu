@@ -1,7 +1,7 @@
 {
   "name": "vue-cmd-menu",
   "description": "Build beautiful and extensible Command + k menus with Vue",
-  "homepage": "https://github.com/BetaHuhn/vue-cmd-menu#readme",
+  "homepage": "https://vue-cmd.deta.dev",
   "keywords": [
     "vue",
     "typescript",
