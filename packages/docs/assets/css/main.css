@@ -6,15 +6,15 @@
   }
 
   & h2 {
-    @apply text-xl font-semibold;
+    @apply text-3xl font-semibold;
   }
 
   & h3 {
-    @apply text-lg;
+    @apply text-lg font-medium;
   }
 
   & h2, & h3, & h4, & h5, & h6 {
-    margin-top: 1rem;
+    margin-top: 2rem;
     margin-bottom: 1rem;
   }
 
@@ -28,8 +28,22 @@
     padding-left: 1.5rem;
   }
 
+  & tbody {
+    @apply bg-gray-100 text-gray-700;
+  }
+
+  & tr:nth-child(2n) {
+    background-color: var(--color-gray-200);
+  }
+
+  & td, & th {
+    @apply p-4;
+    border: 1px solid var(--color-gray-300);
+  }
+
   & th {
     min-width: 70px;
+    text-align: left;
   }
 
   & h2, & h3 {
@@ -45,8 +59,6 @@
 
     /* Style anchor links on headings added by @nuxt/content */
     & > a {
-      @apply ml-5;
-
       &::before {
         content: "#";
         @apply text-primary-500 font-normal text-xl leading-8 -ml-5 pr-2 absolute opacity-100;
@@ -69,6 +81,10 @@
 
   & .nuxt-content-highlight {
     @apply relative;
+
+    & pre {
+      @apply rounded-lg;
+    }
 
     /* Style filename span added by @nuxt/content */
     & > .filename {

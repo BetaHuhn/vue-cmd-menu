@@ -1,6 +1,7 @@
 {
   "title": "Vue ⌘ + K",
   "url": "https://vue-cmd.deta.dev",
+  "logo": "/icon.png",
   "getStartedUrl": "/get-started",
   "navLinks": [
     {
@@ -8,7 +9,7 @@
       "href": "/docs/get-started"
     },
     {
-      "name": "Docs",
+      "name": "Documentation",
       "href": "/docs",
       "page": "home"
     },
@@ -28,12 +29,12 @@
       "href": "https://github.com/sponsors/BetaHuhn"
     },
     {
-      "name": "GitHub",
-      "href": "https://github.com/BetaHuhn/vue-cmd-menu"
+      "name": "Twitter",
+      "href": "https://twitter.com/BetaHuhn"
     },
     {
-      "name": "Documentation",
-      "href": "/docs"
+      "name": "GitHub",
+      "href": "https://github.com/BetaHuhn/vue-cmd-menu"
     }
   ],
   "github": "BetaHuhn/vue-cmd-menu"

@@ -1,8 +1,8 @@
 <template>
-  <footer class="h-16 relative w-full bg-black z-20 text-gray-500">
+  <footer class="h-16 relative w-full bg-gray-200 z-20 text-gray-700">
     <div class="h-full w-full container mx-auto px-4 lg:px-8 flex items-center justify-between">
       <div class="flex-shrink-0 flex-1 flex-col justify-start">
-        <p class="text-sm md:text-base">Made by <a href="https://github.com" class="text-gray-300">@BetaHuhn</a></p>
+        <p class="text-sm md:text-base">Made by <a href="https://github.com" class="text-gray-700 font-medium">@BetaHuhn</a></p>
       </div>
       <div v-if="settings.footerLinks" class="flex items-end ml-auto space-x-4">
          <a v-for="link in settings.footerLinks" :key="link.name" class="text-sm md:text-base" :href="link.href" target="_blank" rel="noopener" :title="link.name" :name="link.name">
