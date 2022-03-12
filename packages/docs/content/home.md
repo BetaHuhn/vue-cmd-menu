@@ -13,7 +13,9 @@ title: Introduction
 
 ## Introduction
 
-`vue-cmd-menu` lets you built a beatiful, fast and extensible command menu like the ones you may know from Vercel, GitHub and Linear or MacOS's Spotlight/Raycast. It can be invoked anywhere in your app via <kbd>Command</kbd> + <kbd>k</kbd> to perform actions users would typically be able to do via an interface.
+`vue-cmd-menu` lets you built a beatiful, fast and extensible command menu like the ones you may know from Vercel, GitHub and Linear or MacOS's Spotlight/Raycast.
+
+It can be invoked anywhere in your app via <kbd>Command</kbd> + <kbd>k</kbd> to perform actions users would typically be able to do via an interface.
 
 ## Get started
 
@@ -50,7 +52,9 @@ export default {
 
 ## Usage
 
-While command menus sound easy to build in theory, in practice handling the different interactions, nagivation options and state management can quickly become complicated. `vue-cmd-menu` provides a simple abstraction over this, simply pass it the actions you want your users to be able to perform and it will handle the rest.
+While command menus sound easy to build in theory, in practice handling the different interactions, nagivation options and state management can quickly become complicated.
+
+`vue-cmd-menu` provides a simple abstraction over this, simply pass it the actions you want your users to be able to perform and it will handle the rest.
 
 ```html
 <template>

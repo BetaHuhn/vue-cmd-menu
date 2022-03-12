@@ -5,7 +5,7 @@
         <Icon :name="icon" />
       </template>
     </CommandMenu>
-    <div class="max-w-4xl w-full m-auto py-6">
+    <div class="max-w-4xl w-full m-auto py-6 px-4">
 		<div class="text-center">
 			<h1 class="text-5xl font-bold">Vue Command Menu</h1>
 			<p class="text-xl mt-2">Build beautiful and extensible ⌘ + k menus with Vue</p>
