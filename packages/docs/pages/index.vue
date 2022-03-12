@@ -55,7 +55,7 @@ export default Vue.extend({
 					id: 'home',
 					section: 'Navigation',
 					text: 'Home',
-          icon: 'home',
+          			icon: 'home',
 					action: () => {
 						window.location.pathname = '/'
 					}
@@ -64,7 +64,7 @@ export default Vue.extend({
 					id: 'docs',
 					section: 'Navigation',
 					text: 'Docs',
-          icon: 'docs',
+          			icon: 'docs',
 					action: () => {
 						window.location.pathname = '/docs'
 					}
@@ -73,7 +73,7 @@ export default Vue.extend({
 					id: 'contact',
 					section: 'Navigation',
 					text: 'Contact',
-          icon: 'contact',
+          			icon: 'contact',
 					action: () => {
 						window.location.pathname = '/contact'
 					}
@@ -82,7 +82,7 @@ export default Vue.extend({
 					id: 'github',
 					section: 'Navigation',
 					text: 'GitHub',
-          icon: 'GitHub',
+         			 icon: 'GitHub',
 					action: () => {
 						window.location.href = 'https://github.com/BetaHuhn/vue-cmd-menu'
 					}
