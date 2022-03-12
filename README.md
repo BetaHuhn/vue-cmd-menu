@@ -10,8 +10,8 @@ Build beautiful and extensible <kbd>⌘</kbd> + <kbd>k</kbd> menus with Vue
 
 <br/>
 
-![image](https://user-images.githubusercontent.com/51766171/158025071-b21f7dde-516d-4442-a59b-66aa42f29d9e.png)
-  
+![image](https://user-images.githubusercontent.com/51766171/158029470-5d684691-d468-4faf-bd03-77ab754fc732.png)
+
 <br/>
 
 </div>
