@@ -1,11 +1,15 @@
 <div align="center">
   
-# Vue CMD Menu
+<img width="100px" src="https://user-images.githubusercontent.com/51766171/158025167-405b273f-fef1-445b-b0b0-611178e843dc.png" />
+  
+# Vue Command Menu
 
 Build beautiful and extensible <kbd>Command</kbd> + <kbd>k</kbd> menus with Vue
+  
+  <br/>
 
-![preview](https://minima-app.fra1.cdn.digitaloceanspaces.com/assets/commandMenu.png)
-
+![image](https://user-images.githubusercontent.com/51766171/158025071-b21f7dde-516d-4442-a59b-66aa42f29d9e.png)
+  
 <br/>
 
 </div>
