@@ -5,60 +5,62 @@
       :ref="name"
       class="cmd-menu"
       :data-name="name"
-      :class="{ 'cmd-menu-shadow': shadow, 'cmd-menu-blur': blur, 'cmd-menu-overlay': overlay }"
+      :class="{ 'cmd-menu-shadow': shadow, 'cmd-menu-blur': blur, 'cmd-menu-overlay': overlay, 'cmd-menu-animations': useAnimations }"
       @click="handleOverlayClick($event)"
 	  :style="`--cmd-theme: ${ theme }`"
 	  :data-theme="theme"
 	  :data-blur="blur"
     >
-      <div class="cmd-menu-inside">
-		<div class="cmd-menu-header">
-			<slot name="header"></slot>
-		</div>
-        <div class="cmd-menu-search-wrapper">
-          <div v-if="currentItem && currentItem.tag" class="cmd-menu-tag">
-            <p>{{ currentItem.tag }}</p>
-          </div>
-          <span v-if="currentItem && currentItem.childTitle" class="cmd-menu-search">{{ currentItem.childTitle }}</span>
-          <input
-            v-else
-            id="cmd-menu-search"
-            ref="cmd-menu-search"
-            type="search"
-            name="search"
-            class="cmd-menu-search"
-            :placeholder="currentItem ? currentItem.placeholder : placeholder"
-            autocomplete="off"
-            autofocus
-            @input="handleInput($event)"
-            @keyup="handleArrowKeys($event)"
-          />
-        </div>
-        <div v-if="!currentItem || results.length > 0" ref="cmd-menu-results" class="cmd-menu-results-wrapper" @keyup="handleArrowKeys($event)">
-          <slot name="results" v-bind="{ data: items }">
-            <div v-for="(section, name) in sections" :key="name" class="cmd-menu-results">
-				<div v-if="name !== '_all'" class="section">{{ name }}</div>
-				<a v-for="item in section" :key="item.id" href="#" @click.prevent="handleClick(item)" @mouseover="$event.target.focus()">
-					<div v-if="item.icon" class="icon">
-						<component v-if="typeof item.icon == 'object'" v-bind:is="item.icon"></component>
-						<slot v-else name="icon" :icon="item.icon" :id="item.id">
-							<component v-bind:is="item.icon"></component>
-						</slot>
-					</div>
-					<p>{{ item.text }}</p>
-					<div v-if="item.keybindings" class="keybindings">
-					<span v-for="key in ['⌘', ...item.keybindings]" :key="key" class="keybinding">{{ key }}</span>
-					</div>
-				</a>
-            </div>
-          </slot>
-        </div>
-		<div class="cmd-menu-footer">
-			<slot name="footer">
-				<p><span class="keybinding" @click="closeOmnibar">ESC</span> to close</p>
+	  <transition name="cmd-menu-inside-fade">
+		<div v-show="open" class="cmd-menu-inside" :style="{ '--cmd-scale': scale }">
+			<div v-if="$slots.header" class="cmd-menu-header">
+				<slot name="header"></slot>
+			</div>
+			<div class="cmd-menu-search-wrapper">
+			<div v-if="currentItem && currentItem.tag" class="cmd-menu-tag">
+				<p>{{ currentItem.tag }}</p>
+			</div>
+			<span v-if="currentItem && currentItem.childTitle" class="cmd-menu-search">{{ currentItem.childTitle }}</span>
+			<input
+				v-else
+				id="cmd-menu-search"
+				ref="cmd-menu-search"
+				type="search"
+				name="search"
+				class="cmd-menu-search"
+				:placeholder="currentItem ? currentItem.placeholder : placeholder"
+				autocomplete="off"
+				autofocus
+				@input="handleInput($event)"
+				@keyup="handleArrowKeys($event)"
+			/>
+			</div>
+			<div v-if="!currentItem || results.length > 0" ref="cmd-menu-results" class="cmd-menu-results-wrapper" @keyup="handleArrowKeys($event)">
+			<slot name="results" v-bind="{ data: items }">
+				<div v-for="(section, name) in sections" :key="name" class="cmd-menu-results">
+					<div v-if="name !== '_all'" class="section">{{ name }}</div>
+					<a v-for="item in section" :key="item.id" href="#" @click.prevent="handleClick(item)" @mouseover="$event.target.focus()">
+						<div v-if="item.icon" class="icon">
+							<component v-if="typeof item.icon == 'object'" v-bind:is="item.icon"></component>
+							<slot v-else name="icon" :icon="item.icon" :id="item.id">
+								<component v-bind:is="item.icon"></component>
+							</slot>
+						</div>
+						<p>{{ item.text }}</p>
+						<div v-if="item.keybindings" class="keybindings">
+						<span v-for="key in ['⌘', ...item.keybindings]" :key="key" class="keybinding">{{ key }}</span>
+						</div>
+					</a>
+				</div>
 			</slot>
+			</div>
+			<div class="cmd-menu-footer">
+				<slot name="footer">
+					<p><span class="keybinding" @click="closeOmnibar">ESC</span> to close</p>
+				</slot>
+			</div>
 		</div>
-      </div>
+	  </transition>
     </div>
   </transition>
 </template>
@@ -75,6 +77,8 @@ interface Data {
   keys: Record<string, boolean>
   open: boolean
   currentItem?: any
+  scale: number
+  useAnimations: boolean
 }
 
 interface Methods {
@@ -89,6 +93,7 @@ interface Methods {
   handleOverlayClick(e: MouseEvent): void
   handleClick(item: Action): void
   executeAction(action: (value?: string | Action) => any, item?: string | Action): void
+  showClickFeedback(): void
 }
 
 interface Computed {
@@ -107,6 +112,7 @@ interface Props {
   placeholder: string
   theme: string
   blur: boolean
+  animations: boolean
 }
 
 // selector list for elements that can be focused
@@ -171,6 +177,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			type: Boolean,
 			required: false,
 			default: true
+		},
+		animations: {
+			type: Boolean,
+			required: false,
+			default: undefined
 		}
 	},
 	data() {
@@ -179,7 +190,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			results: [],
 			keys: {},
 			open: false,
-			currentItem: undefined
+			currentItem: undefined,
+			scale: 1.0,
+			useAnimations: false
 		}
 	},
 	beforeMount() {
@@ -196,6 +209,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 		this.$root.$on(evtOpen, this.openOmnibar)
 		const evtClose = this.name ? `closeCommandMenu.${ this.name }` : 'closeCommandMenu'
 		this.$root.$on(evtClose, this.closeOmnibar)
+
+		const reducedMotion = window.matchMedia(`(prefers-reduced-motion: reduce)`) && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
+		this.useAnimations = this.animations !== undefined ? this.animations : !reducedMotion
 	},
 	computed: {
 		items() {
@@ -311,6 +327,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 				if (key === 'backspace' && this.currentItem && this.search.length === 0) {
 					this.resetOmnibar();
 					(this.$refs['cmd-menu-search'] as HTMLInputElement).focus()
+					this.showClickFeedback()
 					return
 				}
 
@@ -460,6 +477,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 		handleClick(item: Action) {
 			this.$emit('click', item)
 
+			this.showClickFeedback()
+
 			if (item.childActions || item.childTitle) {
 				(this.$refs['cmd-menu-search'] as HTMLInputElement).focus();
 				(this.$refs['cmd-menu-search'] as HTMLInputElement).value = item.value || ''
@@ -501,196 +520,208 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 			if (this.open && !preventClose) {
 				this.closeOmnibar()
 			}
+		},
+		showClickFeedback() {
+			if (!this.useAnimations) return
+			this.scale = 0.98
+			setTimeout(() => this.scale = 1.0, 100)
 		}
 	}
 })
 </script>
 
 <style scoped>
-.cmd-menu[data-theme=dark] {
-    --background: rgb(43, 46, 59);
-    --background-2nd: rgb(38, 39, 49);
-    --background-light: rgb(34, 36, 43);
-	--background-overlay: rgba(0, 0, 0, 0.5);
+	.cmd-menu[data-theme=dark] {
+		--background: rgb(43, 46, 59);
+		--background-2nd: rgb(38, 39, 49);
+		--background-light: rgb(34, 36, 43);
+		--background-overlay: rgba(0, 0, 0, 0.5);
 
-    --text: #BAC0DC;
-    --text-light: #CFD2E3;
-    --text-dark:#7B809F;
+		--text: #BAC0DC;
+		--text-light: #CFD2E3;
+		--text-dark:#7B809F;
 
-    --accent: #7387C9;
-}
+		--accent: #7387C9;
+	}
 
-.cmd-menu[data-theme=dark][data-blur=true] {
-	--background: rgb(43, 46, 59, 0.90);
-    --background-2nd: rgb(34, 35, 45, 0.80);
-    --background-light: rgba(32, 35, 46, 0.75);
-}
+	.cmd-menu[data-theme=dark][data-blur=true] {
+		--background: rgb(43, 46, 59, 0.90);
+		--background-2nd: rgb(34, 35, 45, 0.80);
+		--background-light: rgba(32, 35, 46, 0.75);
+	}
 
-.cmd-menu[data-theme=light] {
-    --background: rgba(255, 255, 255);
-    --background-2nd: rgb(236, 236, 236);
-    --background-light: rgb(226, 226, 226);
-	--background-overlay: rgba(163, 163, 163, 0.5);
+	.cmd-menu[data-theme=light] {
+		--background: rgba(255, 255, 255);
+		--background-2nd: rgb(236, 236, 236);
+		--background-light: rgb(226, 226, 226);
+		--background-overlay: rgba(163, 163, 163, 0.5);
 
-    --text: #444;
-    --text-light: #111;
-    --text-dark:#666;
+		--text: #444;
+		--text-light: #111;
+		--text-dark:#666;
 
-    --accent: #7387C9;
-}
+		--accent: #7387C9;
+	}
 
-.cmd-menu[data-theme=light][data-blur=true] {
-	--background: rgba(255, 255, 255, 0.75);
-    --background-2nd: rgba(183, 183, 183, 0.40);
-    --background-light: rgba(181, 181, 181, 0.40);
-}
+	.cmd-menu[data-theme=light][data-blur=true] {
+		--background: rgba(255, 255, 255, 0.75);
+		--background-2nd: rgba(183, 183, 183, 0.40);
+		--background-light: rgba(181, 181, 181, 0.40);
+	}
 
-.cmd-menu {
-    /* Values */
-    --border-radius: 8px;
-    --click-scale-factor: 0.95;
-	 position: fixed;
-	 top: 0;
-	 left: 0;
-	 right: 0;
-	 bottom: 0;
-	 z-index: 100;
-	 width: 100%;
-	 height: 100%;
-	 padding: 1rem;
-	 box-sizing: border-box;
-	 overscroll-behavior: contain;
-	 color: var(--text);
-}
- .cmd-menu-fade-enter-active, .cmd-menu-fade-leave-active {
-	 transition: opacity 200ms ease;
-}
- .cmd-menu-fade-enter, .cmd-menu-fade-leave-to {
-	 opacity: 0;
-}
- .cmd-menu.cmd-menu-overlay {
-	 background-color: var(--background-overlay);
-}
- .cmd-menu.cmd-menu-shadow .cmd-menu-inside {
-	 box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-.cmd-menu.cmd-menu-blur .cmd-menu-inside {
-	 backdrop-filter: blur(15px) brightness(1.5);
-}
- .cmd-menu-inside {
-	 padding: 0;
-	 background: var(--background);
-	 max-width: 600px;
-	 max-height: min(400px, calc(100vh - 20% - 2rem));
-	 width: 95%;
-	 top: 20%;
-	 left: 50%;
-	 transform: translateX(-50%);
-	 position: absolute;
-	 z-index: 2;
-	 display: flex;
-	 flex-direction: column;
-	 border-radius: var(--border-radius);
-}
-.cmd-menu-header {
-	border-bottom: 1px solid var(--background-2nd);
-}
- .cmd-menu-search-wrapper {
-	 display: flex;
-	 align-items: center;
-	 width: 100%;
-}
- .cmd-menu-tag {
-	 border-radius: var(--border-radius);
-	 padding: 0.5rem 0.8rem;
-	 background: var(--background-light);
-	 margin-right: -0.5rem;
-	 margin-left: 0.5rem;
-	 font-weight: 500;
-}
- .cmd-menu-tag p {
-	 margin: 0;
-	 font-size: 0.8rem;
-}
- .cmd-menu-search {
-	 flex-grow: 1;
-	 appearance: none;
-	 background: none;
-	 border: 0;
-	 outline: 0;
-	 padding: 1rem 1rem;
-	 color: var(--text);
-	 font-family: inherit;
-	 font-size: 1rem;
-}
- .cmd-menu-results-wrapper {
-	 border-top: 1px solid var(--background-2nd);
-	 overflow-y: auto;
-}
- .cmd-menu-results a {
-	 display: flex;
-	 align-items: center;
-	 width: 100%;
-	 padding: 0.6rem 1rem;
-	 box-sizing: border-box;
-	 color: var(--text-dark);
-	 text-decoration: none;
-	 border-left: 2px solid transparent;
-}
- .cmd-menu-results a p {
-	 margin: 0;
-}
- .cmd-menu-results a .icon {
-	 margin-right: 0.5rem;
-	 display: flex;
-}
- .cmd-menu-results a:focus {
-	 outline: 0;
-	 background: var(--background-2nd);
-	 color: var(--text);
-	 border-left: 2px solid var(--text);
-}
- .cmd-menu-results .section {
-	 font-size: 0.8rem;
-	 padding: 0.2rem 1rem;
-	 box-sizing: border-box;
-	 color: var(--text-dark);
-	 margin-top: 0.5rem;
- }
- .cmd-menu-footer {
-	 border-top: 1px solid var(--background-2nd);
-	 font-size: 0.8rem;
-	 color: var(--text-dark);
-}
- .cmd-menu-footer p {
-	 margin: 0;
-	 padding: 0.5rem 0.5rem;
-}
- .cmd-menu .keybindings {
-	 margin-left: auto;
-	 display: flex;
-	 align-items: center;
-}
- .cmd-menu .keybinding {
-	 background: var(--background-light);
-	 border-radius: 5px;
-	 padding: 0.2rem 0.5rem;
-	 margin-left: 0.5rem;
-	 font-family: monospace;
-}
-.cmd-menu input::-webkit-input-placeholder {
-	 color: var(--text-dark);
-}
-.cmd-menu input::-moz-placeholder {
-	 color: var(--text-dark);
-}
-.cmd-menu input::-ms-placeholder {
-	 color: var(--text-dark);
-}
-.cmd-menu input::placeholder {
-	 color: var(--text-dark);
-}
-.cmd-menu ::-webkit-search-cancel-button {
-	 -webkit-appearance: none;
-}
+	.cmd-menu {
+		/* Values */
+		--border-radius: 8px;
+		--click-scale-factor: 0.95;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 100;
+		width: 100%;
+		height: 100%;
+		padding: 1rem;
+		box-sizing: border-box;
+		overscroll-behavior: contain;
+		color: var(--text);
+	}
+	.cmd-menu-fade-enter-active, .cmd-menu-fade-leave-active {
+		transition: opacity 200ms ease;
+	}
+	.cmd-menu-fade-enter, .cmd-menu-fade-leave-to {
+		opacity: 0;
+	}
+	.cmd-menu-animations .cmd-menu-fade-enter-active .cmd-menu-inside {
+		transition: transform .1s ease;
+	}
+	.cmd-menu-animations .cmd-menu-fade-enter .cmd-menu-inside, .cmd-menu-fade-leave-to .cmd-menu-inside {
+		transform: translateX(-50%) scale(0.98);
+	}
+	.cmd-menu.cmd-menu-overlay {
+		background-color: var(--background-overlay);
+	}
+	.cmd-menu.cmd-menu-shadow .cmd-menu-inside {
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+	}
+	.cmd-menu.cmd-menu-blur .cmd-menu-inside {
+		backdrop-filter: blur(15px) brightness(1.5);
+	}
+	.cmd-menu-inside {
+		padding: 0;
+		background: var(--background);
+		max-width: 600px;
+		max-height: min(400px, calc(100vh - 20% - 2rem));
+		width: 95%;
+		top: 20%;
+		left: 50%;
+		transform: translateX(-50%) scale(var(--cmd-scale));
+		position: absolute;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		border-radius: var(--border-radius);
+		transition: transform .05s ease;
+	}
+	.cmd-menu-header {
+		border-bottom: 1px solid var(--background-2nd);
+	}
+	.cmd-menu-search-wrapper {
+		display: flex;
+		align-items: center;
+		width: 100%;
+	}
+	.cmd-menu-tag {
+		border-radius: var(--border-radius);
+		padding: 0.5rem 0.8rem;
+		background: var(--background-light);
+		margin-right: -0.5rem;
+		margin-left: 0.5rem;
+		font-weight: 500;
+	}
+	.cmd-menu-tag p {
+		margin: 0;
+		font-size: 0.8rem;
+	}
+	.cmd-menu-search {
+		flex-grow: 1;
+		appearance: none;
+		background: none;
+		border: 0;
+		outline: 0;
+		padding: 1rem 1rem;
+		color: var(--text);
+		font-family: inherit;
+		font-size: 1rem;
+	}
+	.cmd-menu-results-wrapper {
+		border-top: 1px solid var(--background-2nd);
+		overflow-y: auto;
+	}
+	.cmd-menu-results a {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		padding: 0.6rem 1rem;
+		box-sizing: border-box;
+		color: var(--text-dark);
+		text-decoration: none;
+		border-left: 2px solid transparent;
+	}
+	.cmd-menu-results a p {
+		margin: 0;
+	}
+	.cmd-menu-results a .icon {
+		margin-right: 0.5rem;
+		display: flex;
+	}
+	.cmd-menu-results a:focus {
+		outline: 0;
+		background: var(--background-2nd);
+		color: var(--text);
+		border-left: 2px solid var(--text);
+	}
+	.cmd-menu-results .section {
+		font-size: 0.8rem;
+		padding: 0.2rem 1rem;
+		box-sizing: border-box;
+		color: var(--text-dark);
+		margin-top: 0.5rem;
+	}
+	.cmd-menu-footer {
+		border-top: 1px solid var(--background-2nd);
+		font-size: 0.8rem;
+		color: var(--text-dark);
+	}
+	.cmd-menu-footer p {
+		margin: 0;
+		padding: 0.5rem 0.5rem;
+	}
+	.cmd-menu .keybindings {
+		margin-left: auto;
+		display: flex;
+		align-items: center;
+	}
+	.cmd-menu .keybinding {
+		background: var(--background-light);
+		border-radius: 5px;
+		padding: 0.2rem 0.5rem;
+		margin-left: 0.5rem;
+		font-family: monospace;
+	}
+	.cmd-menu input::-webkit-input-placeholder {
+		color: var(--text-dark);
+	}
+	.cmd-menu input::-moz-placeholder {
+		color: var(--text-dark);
+	}
+	.cmd-menu input::-ms-placeholder {
+		color: var(--text-dark);
+	}
+	.cmd-menu input::placeholder {
+		color: var(--text-dark);
+	}
+	.cmd-menu ::-webkit-search-cancel-button {
+		-webkit-appearance: none;
+	}
 </style>

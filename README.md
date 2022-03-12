@@ -126,6 +126,7 @@ export default Vue.extend({
 - *overlay*: `boolean` - show an overlay under the view box (default: `true`)
 - *theme*: `string` - which theme to use, dark or light (default: `light`)
 - *blur*: `boolean` - enable background blur (default: `true`)
+- *animations*: `boolean` - enable animations (default: `true`)
 - *nestedSearch*: `boolean` - search/filter nested actions
 - *fuseOptions*: `Fuse.IFuseOptions<string>` - options to pass to Fuse.js ([see options page](https://fusejs.io/api/options.html)) (default: `{}`)
 
