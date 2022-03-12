@@ -1,5 +1,8 @@
 import theme from './theme'
 
+const title = 'Vue CMD Menu'
+const description = 'Build beautiful and extensible Command + k menus with Vue.'
+
 export default theme({
 	server: {
 		port: 3000,
@@ -14,7 +17,7 @@ export default theme({
 	},
 	components: true,
 	head: {
-		title: 'Vue CMD Menu',
+		title: title,
 		htmlAttrs: {
 			lang: 'en'
 		},
@@ -29,14 +32,20 @@ export default theme({
 			{
 				hid: 'title',
 				name: 'title',
-				content: 'Vue CMD Menu'
+				content: title
 			},
 			{
 				hid: 'description',
 				name: 'description',
-				content: 'Build beautiful and extensible Command + k menus with Vue.'
+				content: description
 			},
 		]
+	},
+	pwa: {
+		meta: {
+			name: title,
+			description: description
+		}
 	},
 	modules: [
 		'@blokwise/dynamic'
@@ -47,7 +56,7 @@ export default theme({
 	],
 	ackee: {
 		server: 'https://stats.mxis.ch',
-		domainId: '38bf3d25-6935-4759-b9d4-23cb0b9bfb3a',
+		domainId: '2e61c492-a718-4791-a054-674efdd1a16c',
 		detailed: true,
 		ignoreLocalhost: false,
 		ignoreOwnVisits: true
