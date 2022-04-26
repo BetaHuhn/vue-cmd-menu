@@ -94,7 +94,7 @@ export default Vue.extend({
 					section: 'Documentation',
 					text: 'Search Docs',
 					tag: 'Docs',
-					placeholder: 'Keyword to search for',
+					childPlaceholder: 'Keyword to search for',
           			childActions: [
 						{
 							id: 'get-started',
@@ -141,7 +141,7 @@ export default Vue.extend({
 					text: 'Input example',
 					section: 'Examples',
 					tag: 'Enter name',
-					placeholder: 'Your name',
+					childPlaceholder: 'Your name',
 					action: (val) => {
 						alert(`Hello ${ val }`)
 					}
@@ -152,7 +152,7 @@ export default Vue.extend({
 					text: 'Child actions example',
 					section: 'Examples',
 					tag: 'Actions',
-					placeholder: 'Filter',
+					childPlaceholder: 'Filter',
 					childActions: [
 						{
 							id: 'action1',

@@ -28,7 +28,7 @@
 				type="search"
 				name="search"
 				class="cmd-menu-search"
-				:placeholder="currentItem ? currentItem.placeholder : placeholder"
+				:placeholder="currentItem ? currentItem.childPlaceholder : placeholder"
 				autocomplete="off"
 				autofocus
 				@input="handleInput($event)"
@@ -479,7 +479,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 			this.showClickFeedback()
 
-			if (item.childActions || item.childTitle) {
+			if (item.childActions || item.childTitle || item.childPlaceholder) {
 				(this.$refs['cmd-menu-search'] as HTMLInputElement).focus();
 				(this.$refs['cmd-menu-search'] as HTMLInputElement).value = item.value || ''
 				this.search = item.value || ''

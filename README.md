@@ -86,7 +86,7 @@ export default Vue.extend({
           id: 'new',
           text: 'Create New Page',
           tag: 'New',
-          placeholder: 'Page title',
+          childPlaceholder: 'Page title',
           action: (value) => {
             // Handle the action, value contains the entered title
             console.log(value)
@@ -96,7 +96,7 @@ export default Vue.extend({
           id: 'docs',
           text: 'Documentation',
           keybindings: [ '?' ],
-          placeholder: 'Search Docs',
+          childPlaceholder: 'Search Docs',
           childActions: [
             {
               id: 'overview',
@@ -122,6 +122,7 @@ export default Vue.extend({
 - *name*: `string | boolean | null` - namespace the modal and the open event (default: `''`)
 - *actions*: `Array<any | Record<string, any>>` - the available actions to filter and execute (`required`)
 - *keybinding*: `Array<string> | null` - combination of keys that need to be pressed (default: `['meta', 'k']`)
+- *placeholder*: `string` - placeholder to show for the root command (default: `Type a command or search`)
 - *shadow*: `boolean` - add a shadow to the view box (default: `true`)
 - *overlay*: `boolean` - show an overlay under the view box (default: `true`)
 - *theme*: `string` - which theme to use, dark or light (default: `light`)
@@ -153,7 +154,7 @@ Here are all the options available to an action:
 | section      | Section to group the action in                                                      | string                                        | false    |
 | keybindings  | Keystrokes to attach to the action                                                  | string[]                                      | false    |
 | tag          | Tag to show before the input field after the action is selected                     | string                                        | false    |
-| placeholder  | Placeholder to show when waiting for user input after the parent action is selected | string                                        | false    |
+| childPlaceholder  | Placeholder to show when waiting for user input after the parent action is selected | string                                        | false    |
 | value        | Value to insert into the search field when the action is selected                   | string                                        | false    |
 | hidden       | Show the action in the result list                                                  | boolean                                       | false    |
 | childTitle   | Display a title instead of the input field when the action is selected              |string                                        | false    |
@@ -185,7 +186,7 @@ Each of your actions can also have nested/child actions which will be shown once
     id: 'docs',
     text: 'Documentation',
     tag: 'Docs',
-    placeholder: 'Search Docs',
+    childPlaceholder: 'Search Docs',
     childActions: [
       {
         id: 'overview',
@@ -201,7 +202,7 @@ Each of your actions can also have nested/child actions which will be shown once
   }]
 ```
 
-You can also define a `placeholder` which will be shown in the input field before any child action is selected and a `tag` which will be shown before the input to indicate what type of actions are being shown (kind of like a breadcrumb).
+You can also define a `childPlaceholder` which will be shown in the input field before any child action is selected and a `tag` which will be shown before the input to indicate what type of actions are being shown (kind of like a breadcrumb).
 
 ### Keybindings
 
@@ -270,7 +271,7 @@ Here are some examples for different type of actions:
     id: 'new',
     text: 'Create New Page',
     tag: 'New',
-    placeholder: 'Page title',
+    childPlaceholder: 'Page title',
     action: (value) => {
       window.location.pathname = '/'
     }
@@ -279,7 +280,7 @@ Here are some examples for different type of actions:
     id: 'docs',
     icon: DocsIcon,
     text: 'Documentation',
-    placeholder: 'Search Docs',
+    childPlaceholder: 'Search Docs',
     childActions: [
       {
         id: 'overview',

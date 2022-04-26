@@ -19,8 +19,6 @@ export type Action = {
 	keybindings?: string[]
     /** Tag to show before the input field after the action is selected */
 	tag?: string
-    /** Placeholder to show when waiting for user input after the parent action is selected  */
-	placeholder?: string
     /** Value to insert into the search field when the action is selected  */
 	value?: string
     /** Show the action in the result list  */
@@ -29,6 +27,8 @@ export type Action = {
 	preventClose?: boolean
     /** Display a title instead of the input field when the action is selected  */
 	childTitle?: string
+    /** Placeholder to show when waiting for user input after the parent action is selected  */
+	childPlaceholder?: string
     /** Child actions to show once the action is selected   */
 	childActions?: Action[]
 }
